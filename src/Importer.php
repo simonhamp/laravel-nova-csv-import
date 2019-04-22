@@ -5,12 +5,18 @@ namespace SimonHamp\LaravelNovaCsvImport;
 use Laravel\Nova\Resource;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class Importer implements ToModel, WithValidation, WithHeadingRow
+class Importer implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithChunkReading, SkipsOnFailure, SkipsOnError
 {
-    use Importable;
+    use Importable, SkipsFailures, SkipsErrors;
 
     /** @var Resource */
     protected $resource;
@@ -18,6 +24,31 @@ class Importer implements ToModel, WithValidation, WithHeadingRow
     protected $attribute_map;
     protected $rules;
     protected $model_class;
+
+    public function model(array $row)
+    {
+        [$model, $callbacks] = $this->resource::fill(
+            new ImportRequest($this->mapRowDataToAttributes($row)),
+            $this->resource::newModel()
+        );
+
+        return $model;
+    }
+
+    public function rules(): array
+    {
+        return $this->rules;
+    }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+
+    public function chunkSize(): int
+    {
+        return 100;
+    }
 
     /**
      * @return mixed
@@ -57,11 +88,6 @@ class Importer implements ToModel, WithValidation, WithHeadingRow
         return $this;
     }
 
-    public function rules(): array
-    {
-        return $this->rules;
-    }
-
     /**
      * @param mixed $rules
      * @return Importer
@@ -90,16 +116,6 @@ class Importer implements ToModel, WithValidation, WithHeadingRow
         $this->model_class = $model_class;
 
         return $this;
-    }
-
-    public function model(array $row)
-    {
-        [$model, $callbacks] = $this->resource::fill(
-            new ImportRequest($this->mapRowDataToAttributes($row)),
-            $this->resource::newModel()
-        );
-
-        return $model;
     }
 
     public function setResource($resource)

@@ -72,19 +72,14 @@ class ImportController
             ->setAttributes($attributes)
             ->setAttributeMap($attribute_map)
             ->setRules($rules)
-            ->setModelClass($model_class);
+            ->setModelClass($model_class)
+            ->import($this->getFilePath($file), null, 'Csv');
 
-        try {
-            $this->importer->import($this->getFilePath($file), null, 'Csv');
-        } catch (QueryException $e) {
-            throw new \Exception($e->getPrevious()->errorInfo[2]);
-        } catch (ImportException $e) {
-            $this->responseError($e->getMessage());
-        } catch (NoTypeDetectedException $e) {
-            $this->responseError(__('Invalid file type'));
+        if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
+            return response()->json(['result' => 'failure', 'errors' => $this->importer->errors(), 'failures' => $this->importer->failures()]);
         }
 
-        return response()->json(['result' => 'success', ]);
+        return response()->json(['result' => 'success']);
     }
 
     protected function extractValidationRules($request, NovaResource $resource)
