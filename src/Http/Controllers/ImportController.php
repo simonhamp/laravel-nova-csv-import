@@ -42,13 +42,12 @@ class ImportController
         $resources = collect(Nova::$resources);
 
         $fields = $resources->map(function ($resource) {
-                $model = $resource::$model;
+            $model = $resource::$model;
 
-                return new $resource(new $model);
-            })
-            ->mapWithKeys(function (Resource $resource) use ($request) {
-                return [$resource->uriKey() => $resource->creationFields($request)];
-            });
+            return new $resource(new $model);
+        })->mapWithKeys(function (Resource $resource) use ($request) {
+            return [$resource->uriKey() => $resource->creationFields($request)];
+        });
 
         $resources = $resources->mapWithKeys(function ($resource) {
             return [$resource::uriKey() => $resource::label()];
@@ -77,8 +76,8 @@ class ImportController
 
         try {
             $this->importer->import($this->getFilePath($file), null, 'Csv');
-        } catch(QueryException $e) {
             throw new \Exception($e->getPrevious()->errorInfo[2]);
+        } catch (QueryException $e) {
         } catch (ImportException $e) {
             $this->responseError($e->getMessage());
         } catch (NoTypeDetectedException $e) {
