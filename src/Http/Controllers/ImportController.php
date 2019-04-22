@@ -76,8 +76,8 @@ class ImportController
 
         try {
             $this->importer->import($this->getFilePath($file), null, 'Csv');
-            throw new \Exception($e->getPrevious()->errorInfo[2]);
         } catch (QueryException $e) {
+            return response()->json(['result' => 'error', 'message' => $e->getPrevious()->errorInfo[2]], 422);
         } catch (ImportException $e) {
             $this->responseError($e->getMessage());
         } catch (NoTypeDetectedException $e) {
