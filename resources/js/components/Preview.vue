@@ -47,7 +47,7 @@
 
             <div class="bg-30 flex px-8 py-4">
                 <!--<button class="btn btn-default">&leftarrow; Cancel</button>-->
-                <button class="btn btn-default btn-primary" @click="runImport" :disabled="disabledImport">Import &rightarrow; </button>
+                <button class="btn btn-default btn-primary" @click="runImport" :disabled="disabledImport" id="run-import">Import &rightarrow; </button>
             </div>
         </card>
     </div>
@@ -87,7 +87,7 @@ export default {
     ],
     watch: {
         resource : function (resource) {
-            let self = this;
+            const self = this;
 
             // Reset all of the headings to blanks
             this.headings.forEach(function (heading) {
@@ -117,12 +117,16 @@ export default {
     },
     methods: {
         runImport: function () {
+            const self = this;
+
             if (! this.hasValidConfiguration()) {
                 return;
             }
 
-            // TODO: Show a processing loading spinner thingy
-            console.log('Starting import');
+            const button = document.getElementById('run-import');
+            button.innerHTML = 'Importing...';
+            button.setAttribute("disabled", "disabled");
+
             let data = {
                 resource: this.resource,
                 mappings: this.mappings
@@ -131,7 +135,12 @@ export default {
             Nova.request()
                 .post(this.url('import/' + this.file), data)
                 .then(function (response) {
-                    console.log(response);
+                    if (response.data.result === 'success') {
+                        self.$router.push({name: 'csv-import-review', params: {file: self.file, resource: self.resource}});
+                    } else {
+                        button.innerHTML = 'Import &rightarrow;';
+                        button.removeAttribute("disabled");
+                    }
                 });
 
             // this.$router.push({name: 'csv-import-review', params: {file: this.file, resource: this.resource}});
