@@ -136,10 +136,12 @@ export default {
                 .post(this.url('import/' + this.file), data)
                 .then(function (response) {
                     if (response.data.result === 'success') {
+                        self.$toasted.show('All data imported!', {type: "success"});
                         self.$router.push({name: 'csv-import-review', params: {file: self.file, resource: self.resource}});
                     } else {
                         button.innerHTML = 'Import &rightarrow;';
                         button.removeAttribute("disabled");
+                        self.$toasted.show('There were problems importing some of your data', {type: "error"});
                     }
                 });
 
