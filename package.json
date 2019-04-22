@@ -11,11 +11,7 @@
     },
     "devDependencies": {
         "cross-env": "^5.0.0",
-        "laravel-mix": "^4.0",
-        "resolve-url-loader": "^2.3.1",
-        "sass": "^1.19.0",
-        "sass-loader": "^7.1.0",
-        "vue-template-compiler": "^2.6.10"
+        "laravel-mix": "^1.0"
     },
     "dependencies": {
         "vue": "^2.5.0"
