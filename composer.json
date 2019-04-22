@@ -7,7 +7,8 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=7.1.0"
+        "php": ">=7.1.0",
+        "maatwebsite/excel": "^3.1"
     },
     "autoload": {
         "psr-4": {
