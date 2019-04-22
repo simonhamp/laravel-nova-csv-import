@@ -1,0 +1,29 @@
+{
+    "name": "simonhamp/laravel-nova-csv-import",
+    "description": "A fully-fledged CSV import tool for Laravel Nova.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SimonHamp\\LaravelNovaCsvImport\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SimonHamp\\LaravelNovaCsvImport\\ToolServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
