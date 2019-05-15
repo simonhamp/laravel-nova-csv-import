@@ -2,16 +2,12 @@
 
 namespace SimonHamp\LaravelNovaCsvImport\Http\Controllers;
 
-use App\Nova\Resource;
-use Illuminate\Database\QueryException;
 use Laravel\Nova\Nova;
+use Laravel\Nova\Resource;
 use Laravel\Nova\Rules\Relatable;
-use Laravel\Nova\Resource as NovaResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use SimonHamp\LaravelNovaCsvImport\Importer;
 use Illuminate\Validation\ValidationException;
-use SimonHamp\LaravelNovaCsvImport\ImportException;
-use Maatwebsite\Excel\Exceptions\NoTypeDetectedException;
 
 class ImportController
 {
@@ -82,7 +78,7 @@ class ImportController
         return response()->json(['result' => 'success']);
     }
 
-    protected function extractValidationRules($request, NovaResource $resource)
+    protected function extractValidationRules($request, Resource $resource)
     {
         return collect($resource::rulesForCreation($request))->mapWithKeys(function ($rule, $key) {
             foreach ($rule as $i => $r) {
