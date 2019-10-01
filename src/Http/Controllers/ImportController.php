@@ -36,6 +36,10 @@ class ImportController
         $sample = $import->take(10)->all();
 
         $resources = collect(Nova::$resources);
+        
+        $resources = $resources->filter(function ($resource) {
+            return isset($resource::$canImportResource) && $resource::$canImportResource;
+        });
 
         $fields = $resources->map(function ($resource) {
             $model = $resource::$model;
