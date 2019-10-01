@@ -38,7 +38,7 @@ class ImportController
         $resources = collect(Nova::$resources);
         
         $resources = $resources->filter(function ($resource) {
-            return isset($resource::$canImportResource) && $resource::$canImportResource;
+            return property_exists((string) $resource, 'canImportResource') && $resource::$canImportResource;
         });
 
         $fields = $resources->map(function ($resource) {
