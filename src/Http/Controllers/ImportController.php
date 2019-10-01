@@ -38,7 +38,13 @@ class ImportController
         $resources = collect(Nova::$resources);
         
         $resources = $resources->filter(function ($resource) {
-            return property_exists((string) $resource, 'canImportResource') && $resource::$canImportResource;
+            $static_vars = (new \ReflectionClass((string) $resource))->getStaticProperties();
+            
+            if(!isset($static_vars['canImportResource'])) {
+                return true;
+            }
+
+            return isset($static_vars['canImportResource']) && $static_vars['canImportResource'];
         });
 
         $fields = $resources->map(function ($resource) {
