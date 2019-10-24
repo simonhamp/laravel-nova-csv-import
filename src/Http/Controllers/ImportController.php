@@ -8,6 +8,7 @@ use Laravel\Nova\Rules\Relatable;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use SimonHamp\LaravelNovaCsvImport\Importer;
 use Illuminate\Validation\ValidationException;
+use Laravel\Nova\Fields\Field;
 
 class ImportController
 {
@@ -52,7 +53,14 @@ class ImportController
 
             return new $resource(new $model);
         })->mapWithKeys(function (Resource $resource) use ($request) {
-            return [$resource->uriKey() => $resource->creationFields($request)];
+            $fields = collect($resource->creationFields($request))
+                ->map(function (Field $field) {
+                    return [
+                        'name' => $field->name,
+                        'attribute' => $field->attribute
+                    ];
+                });
+            return [$resource->uriKey() => $fields];
         });
 
         $resources = $resources->mapWithKeys(function ($resource) {
