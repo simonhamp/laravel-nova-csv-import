@@ -19,15 +19,16 @@ class UploadController
         ])->validate();
 
         $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
 
         try {
-            (new Importer)->toCollection($file, null, 'Csv');
+            (new Importer)->toCollection($file, null);
         } catch (\Exception $e) {
             return response()->json(['result' => 'error', 'message' => 'Sorry, we could not import that file'], 422);
         }
 
         // Store the file temporarily
-        $hash = File::hash($file->getRealPath());
+        $hash = File::hash($file->getRealPath()).".".$extension;
 
         $file->move(storage_path('nova/laravel-nova-import-csv/tmp'), $hash);
 

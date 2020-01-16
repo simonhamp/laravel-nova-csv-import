@@ -27,7 +27,7 @@ class ImportController
     public function preview(NovaRequest $request, $file)
     {
         $import = $this->importer
-            ->toCollection($this->getFilePath($file), null, 'Csv')
+            ->toCollection($this->getFilePath($file), null)
             ->first();
 
         $headings = $import->first()->keys();
@@ -37,10 +37,10 @@ class ImportController
         $sample = $import->take(10)->all();
 
         $resources = collect(Nova::$resources);
-        
+
         $resources = $resources->filter(function ($resource) {
             $static_vars = (new \ReflectionClass((string) $resource))->getStaticProperties();
-            
+
             if(!isset($static_vars['canImportResource'])) {
                 return true;
             }
@@ -87,7 +87,7 @@ class ImportController
             ->setAttributeMap($attribute_map)
             ->setRules($rules)
             ->setModelClass($model_class)
-            ->import($this->getFilePath($file), null, 'Csv');
+            ->import($this->getFilePath($file), null);
 
         if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
             return response()->json(['result' => 'failure', 'errors' => $this->importer->errors(), 'failures' => $this->importer->failures()]);
