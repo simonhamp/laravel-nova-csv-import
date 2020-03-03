@@ -5,6 +5,7 @@ namespace SimonHamp\LaravelNovaCsvImport\Http\Controllers;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
 use Laravel\Nova\Rules\Relatable;
+use Laravel\Nova\Actions\ActionResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use SimonHamp\LaravelNovaCsvImport\Importer;
 use Illuminate\Validation\ValidationException;
@@ -39,6 +40,14 @@ class ImportController
         $resources = collect(Nova::$resources);
 
         $resources = $resources->filter(function ($resource) {
+            if ($resource === ActionResource::class) {
+                return false;
+            }
+
+            if (!isset($resource::$model)) {
+                return false;
+            }
+
             $static_vars = (new \ReflectionClass((string) $resource))->getStaticProperties();
 
             if(!isset($static_vars['canImportResource'])) {
