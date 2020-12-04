@@ -39,7 +39,7 @@ class ImportController
 
         $resources = collect(Nova::$resources);
 
-        $resources = $resources->filter(function ($resource) {
+        $resources = $resources->filter(function ($resource) use ($request) {
             if ($resource === ActionResource::class) {
                 return false;
             }
@@ -47,8 +47,14 @@ class ImportController
             if (!isset($resource::$model)) {
                 return false;
             }
+            
+            $resourceReflection = (new \ReflectionClass((string) $resource));
 
-            $static_vars = (new \ReflectionClass((string) $resource))->getStaticProperties();
+            $static_vars = $resourceReflection->getStaticProperties();
+
+            if($resourceReflection->hasMethod('canImportWithCSV')) {
+                return $resource::canImportWithCSV($request);
+            }
 
             if(!isset($static_vars['canImportResource'])) {
                 return true;
