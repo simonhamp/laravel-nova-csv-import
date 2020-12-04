@@ -34,6 +34,23 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 }
 ```
 
+## Options
+|Option|Description|Default|
+|------|-----------|-------|
+static $canImportResource | set static boolean value to allow import to the Nova Resource | true
+method canImportResource | define the function to return boolean to allow import to the Nova Resource. Precede static value. | N/A
+  
+  
+### example 
+  
+```php
+// App\Nova\User
+public static function canImportWithCSV(Request $request)
+{
+    return $request->user()->can("create", self::$model);
+}
+```
+
 ## Testing
 
 We need tests! Can you help? Please consider contributing.

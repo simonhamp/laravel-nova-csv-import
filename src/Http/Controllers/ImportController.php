@@ -52,8 +52,8 @@ class ImportController
 
             $static_vars = $resourceReflection->getStaticProperties();
 
-            if($resourceReflection->hasMethod('canImportWithCSV')) {
-                return $resource::canImportWithCSV($request);
+            if($resourceReflection->hasMethod('canImportResource')) {
+                return $resource::canImportResource($request);
             }
 
             if(!isset($static_vars['canImportResource'])) {
