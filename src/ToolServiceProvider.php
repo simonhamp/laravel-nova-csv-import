@@ -28,6 +28,10 @@ class ToolServiceProvider extends ServiceProvider
         Nova::serving(function (ServingNova $event) {
 
         });
+
+        $this->publishes([
+            __DIR__.'/config.php' => config_path('nova-csv-importer.php')
+        ], 'nova-csv-import');
     }
 
     /**
@@ -55,5 +59,7 @@ class ToolServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        $this->mergeConfigFrom(__DIR__.'/config.php', 'nova-csv-importer');
+
     }
 }

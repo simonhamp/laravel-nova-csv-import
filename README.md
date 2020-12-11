@@ -34,6 +34,41 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 }
 ```
 
+## Options
+type |Option|Description|Default|
+|-----|------|-----------|-------|
+static | $canImportResource | set static boolean value to allow import to the Nova Resource | true
+method | canImportResource | define the function to return boolean to allow import to the Nova Resource. Precede static value. | N/A
+method | exceptAttributesImportResource | define the function to return attributes that would need not show up in selection of import | N/A  
+  
+
+### example 
+  
+```php
+// App\Nova\User
+public static function canImportWithCSV(Request $request)
+{
+    return $request->user()->can("create", self::$model);
+}
+```
+
+## Importer Class 
+The package use https://github.com/Maatwebsite/Laravel-Nova-Excel class behind the science. All the attributes and data are passed to the `importer` class which implements many of class provided by the Laravel-Nova-Excel. You can find more information here: https://docs.laravel-excel.com/3.1/imports/basics.html#importing-basics 
+You can define your own importer class to customize to your needs by providing class name in config file. 
+  
+  Export config file 
+  ```
+  php artisan vendor:publish --tag=nova-csv-import
+  ``` 
+
+define own importer class
+```
+<?php
+
+return [
+    'importer' =>  App\Utilities\Importer::class,
+];
+```
 ## Testing
 
 We need tests! Can you help? Please consider contributing.
