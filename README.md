@@ -57,10 +57,10 @@ This package uses [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Exc
 
 You can define your own importer class by providing the relevant class name in your published copy of this package's config file.
   
-  Export config file 
-  ```
-  php artisan vendor:publish --tag=nova-csv-import
-  ``` 
+Publish the config file 
+```
+php artisan vendor:publish --tag=nova-csv-import
+``` 
 
 define own importer class
 ```
