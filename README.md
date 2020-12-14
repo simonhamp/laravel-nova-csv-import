@@ -44,7 +44,7 @@ Add this static property to your Resource to prevent it from showing up in the N
 `public static function canImportResource($request): bool`
 Define a `canImportResource` method to use more complex logic to decide if this Resource can be shown during import. If defined, this takes precedence over the `$canImportResource` property.
 
-`public function excludeAttributesFromImport(): array`
+`public static function excludeAttributesFromImport(): array`
 *Default:* `[]`
 Define a `excludeAttributesFromImport` method that returns an array of attribute names that you want to _exclude_ from being visible in the import tool for this Resource.
   
