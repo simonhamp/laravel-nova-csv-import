@@ -91,7 +91,7 @@ class ImportController
 
                     $static_vars = $resourceReflection->getStaticProperties();
 
-                    if(!isset($static_vars['canImportResource'])) {
+                    if (!isset($static_vars['canImportResource'])) {
                         return true;
                     }
 
