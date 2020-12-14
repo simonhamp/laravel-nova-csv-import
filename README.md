@@ -62,7 +62,7 @@ Publish the config file
 php artisan vendor:publish --tag=nova-csv-import
 ``` 
 
-define own importer class
+Define and register your own importer class
 ```
 <?php
 
