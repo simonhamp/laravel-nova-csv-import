@@ -19,8 +19,6 @@ class ToolServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-nova-csv-import');
 
-        $this->mergeConfigFrom(__DIR__.'/config.php', 'laravel-nova-csv-import');
-
         $this->app->booted(function () {
             $this->routes();
         });
