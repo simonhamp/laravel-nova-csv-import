@@ -46,7 +46,7 @@ method | exceptAttributesImportResource | define the function to return attribut
   
 ```php
 // App\Nova\User
-public static function canImportWithCSV(Request $request)
+public static function canImportResource(Request $request)
 {
     return $request->user()->can("create", self::$model);
 }
