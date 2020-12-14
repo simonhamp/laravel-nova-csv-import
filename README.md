@@ -42,7 +42,7 @@ method | canImportResource | define the function to return boolean to allow impo
 method | exceptAttributesImportResource | define the function to return attributes that would need not show up in selection of import | N/A  
   
 
-### example 
+### Example 
   
 ```php
 // App\Nova\User
