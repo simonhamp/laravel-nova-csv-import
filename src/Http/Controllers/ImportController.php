@@ -85,7 +85,7 @@ class ImportController
                     
                     $resourceReflection = (new \ReflectionClass((string) $resource));
                     
-                    if($resourceReflection->hasMethod('canImportResource')) {
+                    if ($resourceReflection->hasMethod('canImportResource')) {
                         return $resource::canImportResource($request);
                     }
 
