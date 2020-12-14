@@ -53,8 +53,9 @@ public static function canImportResource(Request $request)
 ```
 
 ## Importer Class 
-The package use https://github.com/Maatwebsite/Laravel-Nova-Excel class behind the science. All the attributes and data are passed to the `importer` class which implements many of class provided by the Laravel-Nova-Excel. You can find more information here: https://docs.laravel-excel.com/3.1/imports/basics.html#importing-basics 
-You can define your own importer class to customize to your needs by providing class name in config file. 
+This package uses [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel) behind the scenes to handle the actual import. You can find more information about how importing [works here](https://docs.laravel-excel.com/3.1/imports/basics.html#importing-basics)
+
+You can define your own importer class by providing the relevant class name in your published copy of this package's config file.
   
   Export config file 
   ```
