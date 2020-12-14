@@ -35,11 +35,18 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 ```
 
 ## Options
-type |Option|Description|Default|
-|-----|------|-----------|-------|
-static | $canImportResource | set static boolean value to allow import to the Nova Resource | true
-method | canImportResource | define the function to return boolean to allow import to the Nova Resource. Precede static value. | N/A
-method | exceptAttributesImportResource | define the function to return attributes that would need not show up in selection of import | N/A  
+By default, all of your Nova Resources will be available for import. However, there are a number of ways that you can explicitly limit what's available for importing.
+
+`public static $canImportResource = false;`
+*Default:* `true`
+Add this static property to your Resource to prevent it from showing up in the Nova CSV Import tool interface.
+
+`public static function canImportResource($request): bool`
+Define a `canImportResource` method to use more complex logic to decide if this Resource can be shown during import. If defined, this takes precedence over the `$canImportResource` property.
+
+`public function excludeAttributesFromImport(): array`
+*Default:* `[]`
+Define a `excludeAttributesFromImport` method that returns an array of attribute names that you want to _exclude_ from being visible in the import tool for this Resource.
   
 
 ### Example 
