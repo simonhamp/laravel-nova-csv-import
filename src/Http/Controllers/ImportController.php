@@ -55,7 +55,7 @@ class ImportController
         $fieldsCollection = collect($novaResource->creationFields($request));
 
         if (method_exists($novaResource, 'excludeAttributesFromImport')) {$fieldsCollection = $fieldsCollection->filter(function(Field $field) use ($novaResource, $request) {
-                return !in_array($field->attribute, $novaResource->exludeAttributesFromImport($request));
+                return !in_array($field->attribute, $novaResource->excludeAttributesFromImport($request));
             });
         }
 
