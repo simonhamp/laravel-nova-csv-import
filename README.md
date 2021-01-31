@@ -34,6 +34,54 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 }
 ```
 
+## Options
+By default, all of your Nova Resources will be available for import. However, there are a number of ways that you can explicitly limit what's available for importing.
+
+`public static $canImportResource = false;`  
+*Default:* `true`  
+Add this static property to your Resource to prevent it from showing up in the Nova CSV Import tool interface.
+
+`public static function canImportResource($request): bool`  
+Define a `canImportResource` method to use more complex logic to decide if this Resource can be shown during import. If defined, this takes precedence over the `$canImportResource` property.
+
+`public static function excludeAttributesFromImport(): array`  
+*Default:* `[]`  
+Define a `excludeAttributesFromImport` method that returns an array of attribute names that you want to _exclude_ from being visible in the import tool for this Resource.
+  
+
+### Example 
+  
+```php
+// App\Nova\User
+public static function canImportResource(Request $request)
+{
+    return $request->user()->can("create", self::$model);
+}
+
+public static function excludeAttributesFromImport()
+{
+    return ['password'];
+}
+```
+
+## Importer Class 
+This package uses [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel) behind the scenes to handle the actual import. You can find more information about how importing [works here](https://docs.laravel-excel.com/3.1/imports/basics.html#importing-basics).
+
+You can define your own importer class by providing the relevant class name in your published copy of this package's config file.
+  
+First, publish the config file:
+```
+php artisan vendor:publish --tag=nova-csv-import
+``` 
+
+Then, define and register your own importer class:
+```
+<?php
+
+return [
+    'importer' =>  App\Utilities\Importer::class,
+];
+```
 ## Testing
 
 We need tests! Can you help? Please consider contributing.

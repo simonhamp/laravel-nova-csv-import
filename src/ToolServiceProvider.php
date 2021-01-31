@@ -19,8 +19,6 @@ class ToolServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-nova-csv-import');
 
-        $this->mergeConfigFrom(__DIR__.'/config.php', 'laravel-nova-csv-import');
-
         $this->app->booted(function () {
             $this->routes();
         });
@@ -28,6 +26,10 @@ class ToolServiceProvider extends ServiceProvider
         Nova::serving(function (ServingNova $event) {
 
         });
+
+        $this->publishes([
+            __DIR__.'/config.php' => config_path('nova-csv-importer.php')
+        ], 'nova-csv-import');
     }
 
     /**
@@ -54,6 +56,6 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__.'/config.php', 'nova-csv-importer');
     }
 }

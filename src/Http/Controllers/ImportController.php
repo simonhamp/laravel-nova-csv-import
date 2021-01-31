@@ -20,8 +20,7 @@ class ImportController
 
     public function __construct()
     {
-        $class = config('laravel-nova-csv-import.importer');
-
+        $class = config('nova-csv-importer.importer');
         $this->importer = new $class;
     }
 
@@ -37,39 +36,10 @@ class ImportController
 
         $sample = $import->take(10)->all();
 
-        $resources = collect(Nova::$resources);
+        $resources = $this->getAvailableResourcesForImport($request); 
 
-        $resources = $resources->filter(function ($resource) {
-            if ($resource === ActionResource::class) {
-                return false;
-            }
-
-            if (!isset($resource::$model)) {
-                return false;
-            }
-
-            $static_vars = (new \ReflectionClass((string) $resource))->getStaticProperties();
-
-            if(!isset($static_vars['canImportResource'])) {
-                return true;
-            }
-
-            return isset($static_vars['canImportResource']) && $static_vars['canImportResource'];
-        });
-
-        $fields = $resources->map(function ($resource) {
-            $model = $resource::$model;
-
-            return new $resource(new $model);
-        })->mapWithKeys(function (Resource $resource) use ($request) {
-            $fields = collect($resource->creationFields($request))
-                ->map(function (Field $field) {
-                    return [
-                        'name' => $field->name,
-                        'attribute' => $field->attribute
-                    ];
-                });
-            return [$resource->uriKey() => $fields];
+        $fields = $resources->mapWithKeys(function ($resource) use ($request) {
+            return $this->getAvailableFieldsForImport($resource, $request);
         });
 
         $resources = $resources->mapWithKeys(function ($resource) {
@@ -77,6 +47,56 @@ class ImportController
         });
 
         return response()->json(compact('sample', 'resources', 'fields', 'total_rows', 'headings'));
+    }
+
+    public function getAvailableFieldsForImport(String $resource, $request)
+    {
+        $novaResource = new $resource(new $resource::$model);
+        $fieldsCollection = collect($novaResource->creationFields($request));
+
+            if (method_exists($novaResource, 'excludeAttributesFromImport')) {
+                $fieldsCollection = $fieldsCollection->filter(function(Field $field) use ($novaResource, $request) {
+                return !in_array($field->attribute, $novaResource::excludeAttributesFromImport($request));
+            });
+        }
+
+        $fields = $fieldsCollection->map(function (Field $field) {
+                    return [
+                        'name' => $field->name,
+                        'attribute' => $field->attribute
+                    ];
+                });
+        
+       return [$novaResource->uriKey() => $fields];
+    }
+
+    public function getAvailableResourcesForImport(NovaRequest $request) {
+
+        $novaResources = collect(Nova::authorizedResources($request));
+
+        return $novaResources->filter(function ($resource) use ($request) {
+                    if ($resource === ActionResource::class) {
+                        return false;
+                    }
+
+                    if (!isset($resource::$model)) {
+                        return false;
+                    }
+                    
+                    $resourceReflection = (new \ReflectionClass((string) $resource));
+                    
+                    if ($resourceReflection->hasMethod('canImportResource')) {
+                        return $resource::canImportResource($request);
+                    }
+
+                    $static_vars = $resourceReflection->getStaticProperties();
+
+                    if (!isset($static_vars['canImportResource'])) {
+                        return true;
+                    }
+
+                    return isset($static_vars['canImportResource']) && $static_vars['canImportResource'];
+                });
     }
 
     public function import(NovaRequest $request, $file)
