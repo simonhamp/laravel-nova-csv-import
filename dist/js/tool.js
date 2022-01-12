@@ -1,1 +1,1397 @@
-!function(e){var t={};function n(r){if(t[r])return t[r].exports;var s=t[r]={i:r,l:!1,exports:{}};return e[r].call(s.exports,s,s.exports,n),s.l=!0,s.exports}n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{configurable:!1,enumerable:!0,get:r})},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=3)}([function(e,t){e.exports=function(e){var t=[];return t.toString=function(){return this.map(function(t){var n=function(e,t){var n=e[1]||"",r=e[3];if(!r)return n;if(t&&"function"==typeof btoa){var s=(i=r,"/*# sourceMappingURL=data:application/json;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(i))))+" */"),o=r.sources.map(function(e){return"/*# sourceURL="+r.sourceRoot+e+" */"});return[n].concat(o).concat([s]).join("\n")}var i;return[n].join("\n")}(t,e);return t[2]?"@media "+t[2]+"{"+n+"}":n}).join("")},t.i=function(e,n){"string"==typeof e&&(e=[[null,e,""]]);for(var r={},s=0;s<this.length;s++){var o=this[s][0];"number"==typeof o&&(r[o]=!0)}for(s=0;s<e.length;s++){var i=e[s];"number"==typeof i[0]&&r[i[0]]||(n&&!i[2]?i[2]=n:n&&(i[2]="("+i[2]+") and ("+n+")"),t.push(i))}},t}},function(e,t,n){var r="undefined"!=typeof document;if("undefined"!=typeof DEBUG&&DEBUG&&!r)throw new Error("vue-style-loader cannot be used in a non-browser environment. Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.");var s=n(8),o={},i=r&&(document.head||document.getElementsByTagName("head")[0]),a=null,u=0,c=!1,l=function(){},p=null,f="data-vue-ssr-id",d="undefined"!=typeof navigator&&/msie [6-9]\b/.test(navigator.userAgent.toLowerCase());function v(e){for(var t=0;t<e.length;t++){var n=e[t],r=o[n.id];if(r){r.refs++;for(var s=0;s<r.parts.length;s++)r.parts[s](n.parts[s]);for(;s<n.parts.length;s++)r.parts.push(m(n.parts[s]));r.parts.length>n.parts.length&&(r.parts.length=n.parts.length)}else{var i=[];for(s=0;s<n.parts.length;s++)i.push(m(n.parts[s]));o[n.id]={id:n.id,refs:1,parts:i}}}}function h(){var e=document.createElement("style");return e.type="text/css",i.appendChild(e),e}function m(e){var t,n,r=document.querySelector("style["+f+'~="'+e.id+'"]');if(r){if(c)return l;r.parentNode.removeChild(r)}if(d){var s=u++;r=a||(a=h()),t=b.bind(null,r,s,!1),n=b.bind(null,r,s,!0)}else r=h(),t=function(e,t){var n=t.css,r=t.media,s=t.sourceMap;r&&e.setAttribute("media",r);p.ssrId&&e.setAttribute(f,t.id);s&&(n+="\n/*# sourceURL="+s.sources[0]+" */",n+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(s))))+" */");if(e.styleSheet)e.styleSheet.cssText=n;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(n))}}.bind(null,r),n=function(){r.parentNode.removeChild(r)};return t(e),function(r){if(r){if(r.css===e.css&&r.media===e.media&&r.sourceMap===e.sourceMap)return;t(e=r)}else n()}}e.exports=function(e,t,n,r){c=n,p=r||{};var i=s(e,t);return v(i),function(t){for(var n=[],r=0;r<i.length;r++){var a=i[r];(u=o[a.id]).refs--,n.push(u)}t?v(i=s(e,t)):i=[];for(r=0;r<n.length;r++){var u;if(0===(u=n[r]).refs){for(var c=0;c<u.parts.length;c++)u.parts[c]();delete o[u.id]}}}};var _,g=(_=[],function(e,t){return _[e]=t,_.filter(Boolean).join("\n")});function b(e,t,n,r){var s=n?"":r.css;if(e.styleSheet)e.styleSheet.cssText=g(t,s);else{var o=document.createTextNode(s),i=e.childNodes;i[t]&&e.removeChild(i[t]),i.length?e.insertBefore(o,i[t]):e.appendChild(o)}}},function(e,t){e.exports=function(e,t,n,r,s,o){var i,a=e=e||{},u=typeof e.default;"object"!==u&&"function"!==u||(i=e,a=e.default);var c,l="function"==typeof a?a.options:a;if(t&&(l.render=t.render,l.staticRenderFns=t.staticRenderFns,l._compiled=!0),n&&(l.functional=!0),s&&(l._scopeId=s),o?(c=function(e){(e=e||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(e=__VUE_SSR_CONTEXT__),r&&r.call(this,e),e&&e._registeredComponents&&e._registeredComponents.add(o)},l._ssrRegister=c):r&&(c=r),c){var p=l.functional,f=p?l.render:l.beforeCreate;p?(l._injectStyles=c,l.render=function(e,t){return c.call(t),f(e,t)}):l.beforeCreate=f?[].concat(f,c):[c]}return{esModule:i,exports:a,options:l}}},function(e,t,n){e.exports=n(4)},function(e,t,n){Nova.booting(function(e,t,r){t.addRoutes([{name:"csv-import",path:"/csv-import",component:n(5)},{name:"csv-import-preview",path:"/csv-import/preview/:file",component:n(11),props:function(e){return{file:e.params.file}}},{name:"csv-import-review",path:"/csv-import/review/:file",component:n(16),props:function(e){return{file:e.params.file}}}])})},function(e,t,n){var r=n(2)(n(9),n(10),!1,function(e){n(6)},null,null);e.exports=r.exports},function(e,t,n){var r=n(7);"string"==typeof r&&(r=[[e.i,r,""]]),r.locals&&(e.exports=r.locals);n(1)("5b6ab2b3",r,!0,{})},function(e,t,n){(e.exports=n(0)(!1)).push([e.i,"",""])},function(e,t){e.exports=function(e,t){for(var n=[],r={},s=0;s<t.length;s++){var o=t[s],i=o[0],a={id:e+":"+s,css:o[1],media:o[2],sourceMap:o[3]};r[i]?r[i].parts.push(a):n.push(r[i]={id:i,parts:[a]})}return n}},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={mounted:function(){},data:function(){return{file:""}},methods:{handleFile:function(e){this.file=this.$refs.file.files[0]},upload:function(e){var t=new FormData;t.append("file",this.file);var n=this;Nova.request().post("/nova-vendor/laravel-nova-csv-import/upload",t,{headers:{"Content-Type":"multipart/form-data"}}).then(function(e){n.$router.push({name:"csv-import-preview",params:{file:e.data.file}})}).catch(function(e){n.$toasted.show(e.response.data.message,{type:"error"})})}}}},function(e,t){e.exports={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",[t("heading",{staticClass:"mb-6"},[this._v("CSV Import")]),this._v(" "),t("card",{staticClass:"flex flex-col items-center justify-center",staticStyle:{"min-height":"300px"}},[t("input",{ref:"file",staticClass:"mb-3",attrs:{type:"file",name:"file"},on:{change:this.handleFile}}),this._v(" "),t("button",{staticClass:"btn btn-default btn-primary",attrs:{type:"submit",disabled:!this.file},on:{click:this.upload}},[this._v("Import")])])],1)},staticRenderFns:[]}},function(e,t,n){var r=n(2)(n(14),n(15),!1,function(e){n(12)},null,null);e.exports=r.exports},function(e,t,n){var r=n(13);"string"==typeof r&&(r=[[e.i,r,""]]),r.locals&&(e.exports=r.locals);n(1)("fa58209c",r,!0,{})},function(e,t,n){(e.exports=n(0)(!1)).push([e.i,"",""])},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={mounted:function(){var e=this;Nova.request().get("/nova-vendor/laravel-nova-csv-import/preview/"+this.file).then(function(t){e.headings=t.data.headings,e.rows=t.data.sample,e.resources=t.data.resources,e.total_rows=t.data.total_rows,e.fields=t.data.fields,e.headings.forEach(function(t){e.$set(e.mappings,t,"")})})},data:function(){return{headings:[],rows:[],resources:[],fields:[],resource:"",mappings:{}}},props:["file"],watch:{resource:function(e){var t=this;this.headings.forEach(function(e){t.$set(t.mappings,e,"")}),""!==e&&this.fields[e].forEach(function(e){var n=e.attribute,r=t.headings.indexOf(n);if(!(r<0)){var s=t.headings[r];s===n&&t.$set(t.mappings,s,n)}})}},methods:{runImport:function(){var e=this;if(this.hasValidConfiguration()){var t=document.getElementById("run-import");t.innerHTML="Importing...",t.setAttribute("disabled","disabled");var n={resource:this.resource,mappings:this.mappings};Nova.request().post(this.url("import/"+this.file),n).then(function(n){"success"===n.data.result?(e.$toasted.show("All data imported!",{type:"success"}),e.$router.push({name:"csv-import-review",params:{file:e.file,resource:e.resource}})):(t.innerHTML="Import &rightarrow;",t.removeAttribute("disabled"),e.$toasted.show("There were problems importing some of your data",{type:"error"}))})}},hasValidConfiguration:function(){var e=[],t=this.mappings;return Object.keys(t).forEach(function(n){""!==t[n]&&e.push(n)}),""!==this.resource&&e.length>0},url:function(e){return"/nova-vendor/laravel-nova-csv-import/"+e}},computed:{disabledImport:function(){return!this.hasValidConfiguration()}}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",[n("heading",{staticClass:"mb-6"},[e._v("CSV Import")]),e._v(" "),n("card",{staticClass:"flex flex-col",staticStyle:{"min-height":"300px"}},[n("div",{staticClass:"p-8"},[n("h2",{staticClass:"pb-4"},[e._v("Preview")]),e._v(" "),n("p",{staticClass:"pb-4"},[e._v("\n                We were able to discover "),n("b",[e._v(e._s(e.headings.length))]),e._v(" column(s) and "),n("b",[e._v(e._s(e.total_rows))]),e._v("\n                row(s) in your data.\n            ")]),e._v(" "),n("p",{staticClass:"pb-4"},[e._v("\n                Choose a resource to import them into and match up the headings from the CSV to the\n                appropriate fields of the resource.\n            ")]),e._v(" "),n("h2",{staticClass:"py-4"},[e._v("Resource")]),e._v(" "),n("p",{staticClass:"pb-4"},[e._v("Choose which resource to import your data into:")]),e._v(" "),n("div",[n("select",{directives:[{name:"model",rawName:"v-model",value:e.resource,expression:"resource"}],staticClass:"block form-control form-select",attrs:{name:"resource"},on:{change:function(t){var n=Array.prototype.filter.call(t.target.options,function(e){return e.selected}).map(function(e){return"_value"in e?e._value:e.value});e.resource=t.target.multiple?n:n[0]}}},[n("option",{attrs:{value:""}},[e._v("- Select a resource -")]),e._v(" "),e._l(e.resources,function(t,r){return n("option",{domProps:{value:r}},[e._v(e._s(t))])})],2)])]),e._v(" "),n("table",{staticClass:"table w-full"},[n("thead",[n("tr",e._l(e.headings,function(t){return n("th",[e._v(e._s(t))])}),0)]),e._v(" "),n("tbody",[n("tr",e._l(e.headings,function(t){return n("td",{staticClass:"text-center"},[n("select",{directives:[{name:"model",rawName:"v-model",value:e.mappings[t],expression:"mappings[heading]"}],staticClass:"w-full form-control form-select",on:{change:function(n){var r=Array.prototype.filter.call(n.target.options,function(e){return e.selected}).map(function(e){return"_value"in e?e._value:e.value});e.$set(e.mappings,t,n.target.multiple?r:r[0])}}},[n("option",{attrs:{value:""}},[e._v("- Ignore this column -")]),e._v(" "),e._l(e.fields[e.resource],function(t){return n("option",{domProps:{value:t.attribute}},[e._v(e._s(t.name))])})],2)])}),0),e._v(" "),e._l(e.rows,function(t){return n("tr",e._l(t,function(t){return n("td",[e._v(e._s(t))])}),0)})],2)]),e._v(" "),n("div",{staticClass:"bg-30 flex px-8 py-4"},[n("button",{staticClass:"btn btn-default btn-primary",attrs:{disabled:e.disabledImport,id:"run-import"},on:{click:e.runImport}},[e._v("Import → ")])])])],1)},staticRenderFns:[]}},function(e,t,n){var r=n(2)(n(19),n(20),!1,function(e){n(17)},null,null);e.exports=r.exports},function(e,t,n){var r=n(18);"string"==typeof r&&(r=[[e.i,r,""]]),r.locals&&(e.exports=r.locals);n(1)("d59be518",r,!0,{})},function(e,t,n){(e.exports=n(0)(!1)).push([e.i,"",""])},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default={mounted:function(){},data:function(){return{imported:""}},methods:{}}},function(e,t){e.exports={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",[t("heading",{staticClass:"mb-6"},[this._v("CSV Import")]),this._v(" "),t("card",{staticClass:"flex flex-col items-center justify-center",staticStyle:{"min-height":"300px"}},[t("h1",{staticClass:"pb-4"},[this._v("Done!")]),this._v(" "),t("p",{staticClass:"pb-4"},[this._v("All your data was successfully imported.")]),this._v(" "),t("a",{attrs:{href:"/nova/csv-import/"}},[this._v("Upload more")])])],1)},staticRenderFns:[]}}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
+*/
+
+var hasDocument = typeof document !== 'undefined'
+
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
+}
+
+var listToStyles = __webpack_require__(8)
+
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
+}
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(4);
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+Nova.booting(function (Vue, router, store) {
+    router.addRoutes([{
+        name: 'csv-import',
+        path: '/csv-import',
+        component: __webpack_require__(5)
+    }, {
+        name: 'csv-import-preview',
+        path: '/csv-import/preview/:file',
+        component: __webpack_require__(11),
+        props: function props(route) {
+            return {
+                file: route.params.file
+            };
+        }
+    }, {
+        name: 'csv-import-review',
+        path: '/csv-import/review/:file',
+        component: __webpack_require__(16),
+        props: function props(route) {
+            return {
+                file: route.params.file
+            };
+        }
+    }]);
+});
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(6)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(9)
+/* template */
+var __vue_template__ = __webpack_require__(10)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Main.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b9c20fb8", Component.options)
+  } else {
+    hotAPI.reload("data-v-b9c20fb8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(7);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("a59d0524", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b9c20fb8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Main.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b9c20fb8\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Main.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+/**
+ * Translates the list format produced by css-loader into something
+ * easier to manipulate.
+ */
+module.exports = function listToStyles (parentId, list) {
+  var styles = []
+  var newStyles = {}
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i]
+    var id = item[0]
+    var css = item[1]
+    var media = item[2]
+    var sourceMap = item[3]
+    var part = {
+      id: parentId + ':' + i,
+      css: css,
+      media: media,
+      sourceMap: sourceMap
+    }
+    if (!newStyles[id]) {
+      styles.push(newStyles[id] = { id: id, parts: [part] })
+    } else {
+      newStyles[id].parts.push(part)
+    }
+  }
+  return styles
+}
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    metaInfo: function metaInfo() {
+        return {
+            title: "Import data"
+        };
+    },
+    mounted: function mounted() {
+        //
+    },
+    data: function data() {
+        return {
+            file: ''
+        };
+    },
+
+    methods: {
+        handleFile: function handleFile(event) {
+            this.file = this.$refs.file.files[0];
+        },
+        upload: function upload(event) {
+            var formData = new FormData();
+            // send it to the server
+            formData.append('file', this.file);
+
+            var self = this;
+
+            // if it's valid, move to the next screen
+            Nova.request().post('/nova-vendor/laravel-nova-csv-import/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(function (response) {
+                self.$router.push({ name: 'csv-import-preview', params: { file: response.data.file } });
+            }).catch(function (e) {
+                self.$toasted.show(e.response.data.message, { type: "error" });
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("heading", { staticClass: "mb-6" }, [_vm._v("CSV Import")]),
+      _vm._v(" "),
+      _c(
+        "card",
+        {
+          staticClass: "flex flex-col items-center justify-center",
+          staticStyle: { "min-height": "300px" }
+        },
+        [
+          _c("input", {
+            ref: "file",
+            staticClass: "mb-3",
+            attrs: { type: "file", name: "file" },
+            on: { change: _vm.handleFile }
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-default btn-primary",
+              attrs: { type: "submit", disabled: !_vm.file },
+              on: { click: _vm.upload }
+            },
+            [_vm._v("Import")]
+          )
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-b9c20fb8", module.exports)
+  }
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(12)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(14)
+/* template */
+var __vue_template__ = __webpack_require__(15)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Preview.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-eaf22da6", Component.options)
+  } else {
+    hotAPI.reload("data-v-eaf22da6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(13);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("a376ac26", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-eaf22da6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Preview.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-eaf22da6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Preview.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    metaInfo: function metaInfo() {
+        return {
+            title: "Preview your imported data"
+        };
+    },
+    mounted: function mounted() {
+        var self = this;
+
+        Nova.request().get('/nova-vendor/laravel-nova-csv-import/preview/' + this.file).then(function (response) {
+            self.headings = response.data.headings;
+            self.rows = response.data.sample;
+            self.resources = response.data.resources;
+            self.total_rows = response.data.total_rows;
+            self.fields = response.data.fields;
+
+            self.headings.forEach(function (heading) {
+                self.$set(self.mappings, heading, "");
+            });
+        });
+    },
+    data: function data() {
+        return {
+            headings: [],
+            rows: [],
+            resources: [],
+            fields: [],
+            resource: '',
+            mappings: {}
+        };
+    },
+
+    props: ['file'],
+    watch: {
+        resource: function resource(_resource) {
+            var self = this;
+
+            // Reset all of the headings to blanks
+            this.headings.forEach(function (heading) {
+                self.$set(self.mappings, heading, "");
+            });
+
+            if (_resource === "") {
+                return;
+            }
+
+            // For each field of the resource, try to find a matching heading and pre-assign
+            this.fields[_resource].forEach(function (field_config) {
+                var field = field_config.attribute,
+                    heading_index = self.headings.indexOf(field);
+
+                if (heading_index < 0) {
+                    return;
+                }
+
+                var heading = self.headings[heading_index];
+
+                if (heading === field) {
+                    self.$set(self.mappings, heading, field);
+                }
+            });
+        }
+    },
+    methods: {
+        runImport: function runImport() {
+            var self = this;
+
+            if (!this.hasValidConfiguration()) {
+                return;
+            }
+
+            var button = document.getElementById('run-import');
+            button.innerHTML = 'Importing...';
+            button.setAttribute("disabled", "disabled");
+
+            var data = {
+                resource: this.resource,
+                mappings: this.mappings
+            };
+
+            Nova.request().post(this.url('import/' + this.file), data).then(function (response) {
+                if (response.data.result === 'success') {
+                    self.$toasted.show('All data imported!', { type: "success" });
+                    self.$router.push({ name: 'csv-import-review', params: { file: self.file, resource: self.resource } });
+                } else {
+                    button.innerHTML = 'Import &rightarrow;';
+                    button.removeAttribute("disabled");
+                    self.$toasted.show('There were problems importing some of your data', { type: "error" });
+                }
+            });
+
+            // this.$router.push({name: 'csv-import-review', params: {file: this.file, resource: this.resource}});
+        },
+        hasValidConfiguration: function hasValidConfiguration() {
+            var mappedColumns = [],
+                mappings = this.mappings;
+
+            Object.keys(mappings).forEach(function (key) {
+                if (mappings[key] !== "") {
+                    mappedColumns.push(key);
+                }
+            });
+
+            return this.resource !== '' && mappedColumns.length > 0;
+        },
+        url: function url(path) {
+            return '/nova-vendor/laravel-nova-csv-import/' + path;
+        }
+    },
+    computed: {
+        disabledImport: function disabledImport() {
+            return !this.hasValidConfiguration();
+        }
+    }
+});
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("heading", { staticClass: "mb-6" }, [_vm._v("CSV Import")]),
+      _vm._v(" "),
+      _c(
+        "card",
+        {
+          staticClass: "flex flex-col",
+          staticStyle: { "min-height": "300px" }
+        },
+        [
+          _c("div", { staticClass: "p-8" }, [
+            _c("h2", { staticClass: "pb-4" }, [_vm._v("Preview")]),
+            _vm._v(" "),
+            _c("p", { staticClass: "pb-4" }, [
+              _vm._v("\n                We were able to discover "),
+              _c("b", [_vm._v(_vm._s(_vm.headings.length))]),
+              _vm._v(" column(s) and "),
+              _c("b", [_vm._v(_vm._s(_vm.total_rows))]),
+              _vm._v("\n                row(s) in your data.\n            ")
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "pb-4" }, [
+              _vm._v(
+                "\n                Choose a resource to import them into and match up the headings from the CSV to the\n                appropriate fields of the resource.\n            "
+              )
+            ]),
+            _vm._v(" "),
+            _c("h2", { staticClass: "py-4" }, [_vm._v("Resource")]),
+            _vm._v(" "),
+            _c("p", { staticClass: "pb-4" }, [
+              _vm._v("Choose which resource to import your data into:")
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.resource,
+                      expression: "resource"
+                    }
+                  ],
+                  staticClass: "block form-control form-select",
+                  attrs: { name: "resource" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.resource = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "" } }, [
+                    _vm._v("- Select a resource -")
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.resources, function(label, index) {
+                    return _c("option", { domProps: { value: index } }, [
+                      _vm._v(_vm._s(label))
+                    ])
+                  })
+                ],
+                2
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("table", { staticClass: "table w-full" }, [
+            _c("thead", [
+              _c(
+                "tr",
+                _vm._l(_vm.headings, function(heading) {
+                  return _c("th", [_vm._v(_vm._s(heading))])
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              [
+                _c(
+                  "tr",
+                  _vm._l(_vm.headings, function(heading) {
+                    return _c("td", { staticClass: "text-center" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.mappings[heading],
+                              expression: "mappings[heading]"
+                            }
+                          ],
+                          staticClass: "w-full form-control form-select",
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.$set(
+                                _vm.mappings,
+                                heading,
+                                $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              )
+                            }
+                          }
+                        },
+                        [
+                          _c("option", { attrs: { value: "" } }, [
+                            _vm._v("- Ignore this column -")
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(_vm.fields[_vm.resource], function(field) {
+                            return _c(
+                              "option",
+                              { domProps: { value: field.attribute } },
+                              [_vm._v(_vm._s(field.name))]
+                            )
+                          })
+                        ],
+                        2
+                      )
+                    ])
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.rows, function(row) {
+                  return _c(
+                    "tr",
+                    _vm._l(row, function(col) {
+                      return _c("td", [_vm._v(_vm._s(col))])
+                    }),
+                    0
+                  )
+                })
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "bg-30 flex px-8 py-4" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-default btn-primary",
+                attrs: { disabled: _vm.disabledImport, id: "run-import" },
+                on: { click: _vm.runImport }
+              },
+              [_vm._v("Import → ")]
+            )
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-eaf22da6", module.exports)
+  }
+}
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(17)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(19)
+/* template */
+var __vue_template__ = __webpack_require__(20)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Review.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-097b3983", Component.options)
+  } else {
+    hotAPI.reload("data-v-097b3983", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(18);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("857e1a9e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-097b3983\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Review.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-097b3983\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Review.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* Scoped Styles */\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    metaInfo: function metaInfo() {
+        return {
+            title: "All your data was successfully imported"
+        };
+    },
+    mounted: function mounted() {},
+    data: function data() {
+        return {
+            imported: ''
+        };
+    },
+
+    methods: {}
+});
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("heading", { staticClass: "mb-6" }, [_vm._v("CSV Import")]),
+      _vm._v(" "),
+      _c(
+        "card",
+        {
+          staticClass: "flex flex-col items-center justify-center",
+          staticStyle: { "min-height": "300px" }
+        },
+        [
+          _c("h1", { staticClass: "pb-4" }, [_vm._v("Done!")]),
+          _vm._v(" "),
+          _c("p", { staticClass: "pb-4" }, [
+            _vm._v("All your data was successfully imported.")
+          ]),
+          _vm._v(" "),
+          _c("a", { attrs: { href: "/nova/csv-import/" } }, [
+            _vm._v("Upload more")
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-097b3983", module.exports)
+  }
+}
+
+/***/ })
+/******/ ]);

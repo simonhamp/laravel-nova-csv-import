@@ -55,6 +55,11 @@
 
 <script>
 export default {
+    metaInfo() {
+        return {
+          title: "Preview your imported data",
+        };
+    },
     mounted() {
         const self = this;
 

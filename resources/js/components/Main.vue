@@ -11,6 +11,11 @@
 
 <script>
 export default {
+    metaInfo() {
+        return {
+          title: "Import data",
+        };
+    },
     mounted() {
         //
     },
