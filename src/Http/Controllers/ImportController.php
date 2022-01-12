@@ -54,8 +54,8 @@ class ImportController
         $novaResource = new $resource(new $resource::$model);
         $fieldsCollection = collect($novaResource->creationFields($request));
 
-            if (method_exists($novaResource, 'excludeAttributesFromImport')) {
-                $fieldsCollection = $fieldsCollection->filter(function(Field $field) use ($novaResource, $request) {
+        if (method_exists($novaResource, 'excludeAttributesFromImport')) {
+            $fieldsCollection = $fieldsCollection->filter(function(Field $field) use ($novaResource, $request) {
                 return !in_array($field->attribute, $novaResource::excludeAttributesFromImport($request));
             });
         }
@@ -67,7 +67,9 @@ class ImportController
                     ];
                 });
         
-       return [$novaResource->uriKey() => $fields];
+        // Note: ->values() is used here to avoid this array being turned into an object due to 
+        // non-sequential keys (which might happen due to the filtering above.
+        return [$novaResource->uriKey() => $fields->values()];
     }
 
     public function getAvailableResourcesForImport(NovaRequest $request) {
