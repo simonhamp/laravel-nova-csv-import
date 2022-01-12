@@ -3,8 +3,8 @@
         <heading class="mb-6">CSV Import</heading>
 
         <card class="flex flex-col items-center justify-center" style="min-height: 300px">
-            <input type="file" name="file" ref="file" @change="handleFile">
-            <button type="submit" class="btn btn-default btn-primary" @click="upload">Import</button>
+            <input type="file" name="file" ref="file" @change="handleFile" class="mb-3">
+            <button type="submit" class="btn btn-default btn-primary" v-bind:disabled="!file" @click="upload">Import</button>
         </card>
     </div>
 </template>
