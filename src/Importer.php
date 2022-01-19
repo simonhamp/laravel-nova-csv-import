@@ -13,8 +13,9 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class Importer implements ToModel, WithValidation, WithHeadingRow, WithBatchInserts, WithChunkReading, SkipsOnFailure, SkipsOnError
+class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, WithBatchInserts, WithChunkReading, SkipsOnFailure, SkipsOnError
 {
     use Importable, SkipsFailures, SkipsErrors;
 
@@ -25,12 +26,14 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithBatchInse
     protected $rules;
     protected $model_class;
 
+    public function map($row): array { 
+        return $this->mapRowDataToAttributes($row);
+    }
+
     public function model(array $row)
     {
-        [$model, $callbacks] = $this->resource::fill(
-            new ImportRequest($this->mapRowDataToAttributes($row)),
-            $this->resource::newModel()
-        );
+        $model = $this->resource::newModel();
+        $model->fill($row);
 
         return $model;
     }
