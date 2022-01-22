@@ -12,6 +12,11 @@
 
 <script>
 export default {
+    metaInfo() {
+        return {
+          title: "All your data was successfully imported",
+        };
+    },
     mounted() {
 
     },
