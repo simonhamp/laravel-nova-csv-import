@@ -1,33 +1,31 @@
 <template>
     <div>
+        <Head>
+            <title>Import data</title>
+        </Head>
+
         <heading class="mb-6">CSV Import</heading>
 
         <card class="flex flex-col items-center justify-center" style="min-height: 300px">
             <input type="file" name="file" ref="file" @change="handleFile" class="mb-3">
-            <button type="submit" class="btn btn-default btn-primary" v-bind:disabled="!file" @click="upload">Import</button>
+            <DefaultButton v-bind:disabled="!file" @click="upload">Configure &rightarrow;</DefaultButton>
         </card>
     </div>
 </template>
 
 <script>
 export default {
-    metaInfo() {
-        return {
-          title: "Import data",
-        };
-    },
-    mounted() {
-        //
-    },
     data() {
         return {
             file: '',
         };
     },
+
     methods: {
         handleFile: function (event) {
             this.file = this.$refs.file.files[0];
         },
+
         upload: function (event) {
             let formData = new FormData();
             // send it to the server
@@ -36,7 +34,7 @@ export default {
             const self = this;
 
             // if it's valid, move to the next screen
-            Nova.request()
+            return Nova.request()
                 .post('/nova-vendor/laravel-nova-csv-import/upload',
                     formData,
                     {
@@ -44,17 +42,15 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         }
                     }
-                ).then(function(response){
-                    self.$router.push({name: 'csv-import-preview', params: {file: response.data.file}})
+                )
+                .then((response) => {
+                    Nova.success('File uploaded!')
+                    Nova.visit(response.data.configure);
                 })
-                .catch(function(e){
-                    self.$toasted.show(e.response.data.message, {type: "error"});
+                .catch((e) => {
+                    Nova.error(e.response.data.message);
                 });
         }
     }
 }
 </script>
-
-<style>
-/* Scoped Styles */
-</style>
