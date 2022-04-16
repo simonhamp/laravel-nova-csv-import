@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/upload', 'UploadController@handle');
-Route::get('/preview/{file}', 'ImportController@preview');
-Route::post('/import/{file}', 'ImportController@import');
+Route::post('/configure', 'ImportController@storeConfig');
+Route::post('/import', 'ImportController@import');
