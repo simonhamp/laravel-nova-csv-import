@@ -4,6 +4,8 @@ namespace SimonHamp\LaravelNovaCsvImport;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
+use Illuminate\Http\Request;
+use Laravel\Nova\Menu\MenuSection;
 
 class LaravelNovaCsvImport extends Tool
 {
@@ -15,7 +17,6 @@ class LaravelNovaCsvImport extends Tool
     public function boot()
     {
         Nova::script('laravel-nova-csv-import', __DIR__.'/../dist/js/tool.js');
-        Nova::style('laravel-nova-csv-import', __DIR__.'/../dist/css/tool.css');
     }
 
     /**
@@ -23,8 +24,10 @@ class LaravelNovaCsvImport extends Tool
      *
      * @return \Illuminate\View\View
      */
-    public function renderNavigation()
+    public function menu(Request $request)
     {
-        return view('laravel-nova-csv-import::navigation');
+        return MenuSection::make('CSV Import')
+            ->path('/csv-import')
+            ->icon('upload');
     }
 }
