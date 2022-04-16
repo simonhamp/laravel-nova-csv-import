@@ -17,8 +17,6 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-nova-csv-import');
-
         $this->app->booted(function () {
             $this->routes();
         });
@@ -43,10 +41,14 @@ class ToolServiceProvider extends ServiceProvider
             return;
         }
 
+        Nova::router(['nova', Authorize::class], 'csv-import')
+            ->namespace(__NAMESPACE__ . '\\Http\\Controllers')
+            ->group(__DIR__.'/../routes/inertia.php');
+
         Route::middleware(['nova', Authorize::class])
-                ->namespace(__NAMESPACE__ . '\\Http\\Controllers')
-                ->prefix('nova-vendor/laravel-nova-csv-import')
-                ->group(__DIR__.'/../routes/api.php');
+            ->namespace(__NAMESPACE__ . '\\Http\\Controllers')
+            ->prefix('nova-vendor/laravel-nova-csv-import')
+            ->group(__DIR__.'/../routes/api.php');
     }
 
     /**
