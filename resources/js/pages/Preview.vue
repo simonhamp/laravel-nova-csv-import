@@ -18,10 +18,14 @@
                     <thead class="border-b">
                         <tr>
                             <th class="border-r" rowspan="2" valign="bottom">#</th>
-                            <th v-for="(column, field) in columns">{{ field }}</th>
+                            <th v-for="(column, field) in columns">
+                                {{ column }}
+                                <i v-if="! column">unmapped</i>
+                                <div v-else>&downarrow;</div>
+                            </th>
                         </tr>
                         <tr>
-                            <th v-for="(column, field) in columns">{{ column }} <i v-if="! column">unmapped</i></th>
+                            <th v-for="(column, field) in columns">{{ field }}</th>
                         </tr>
                     </thead>
                     <tbody>
