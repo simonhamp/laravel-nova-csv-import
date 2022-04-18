@@ -20,7 +20,7 @@
                 <hr>
 
                 <div class="overflow-scroll">
-                    <table class="table-auto">
+                    <table cellpadding="10">
                         <thead>
                             <tr>
                                 <th v-for="heading in headings"><span class="font-bold">{{ heading }}</span></th>
@@ -48,7 +48,7 @@
                     </SelectControl>
                 </div>
 
-                <table class="table md:w-1/2" v-if="resource">
+                <table cellpadding="10" v-if="resource">
                     <thead>
                         <tr>
                             <th>Fields</th>
@@ -69,8 +69,11 @@
                 </table>
 
                 <div class="flex justify-center space-x-2">
+                    <LinkButton @click="goBack">
+                        &leftarrow; Upload a different file
+                    </LinkButton>
                     <DefaultButton :disabled="disabledSave" @click="saveConfig">
-                        {{ saving ? 'Importing...' : 'Save &amp; continue &rightarrow;' }}
+                        {{ saving ? 'Importing...' : 'Save &amp; Preview &rightarrow;' }}
                     </DefaultButton>
                 </div>
             </div>
@@ -80,9 +83,6 @@
 
 <script>
 export default {
-    mounted() {
-
-    },
 
     data() {
         return {
@@ -131,7 +131,7 @@ export default {
     },
 
     methods: {
-        runImport: function () {
+        saveConfig() {
             if (! this.hasValidConfiguration()) {
                 return;
             }
@@ -156,9 +156,15 @@ export default {
                     this.saving = false;
                     Nova.error('There was a problem saving your configuration');
                 });
+
+            this.saving = false;
         },
 
-        hasValidConfiguration: function () {
+        goBack() {
+            Nova.visit('/csv-import/')
+        },
+
+        hasValidConfiguration() {
             const mappedColumns = [],
                 mappings = this.mappings;
 

@@ -8,7 +8,7 @@
 
         <card class="flex flex-col items-center justify-center" style="min-height: 300px">
             <input type="file" name="file" ref="file" @change="handleFile" class="mb-3">
-            <DefaultButton v-bind:disabled="!file" @click="upload">Configure &rightarrow;</DefaultButton>
+            <DefaultButton v-bind:disabled="!file" @click="upload">Upload &amp; Configure &rightarrow;</DefaultButton>
         </card>
     </div>
 </template>
