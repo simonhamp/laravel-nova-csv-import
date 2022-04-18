@@ -42,7 +42,7 @@
                 </p>
 
                 <div>
-                    <SelectControl @change="(value) => resource = value" class="md:w-1/2">
+                    <SelectControl @change="(value) => resource = value" :selected="resource" class="md:w-1/2">
                         <option value="">- Select a resource -</option>
                         <option v-for="(label, index) in resources" :value="index">{{ label }}</option>
                     </SelectControl>
@@ -86,8 +86,8 @@ export default {
 
     data() {
         return {
-            resource: '',
-            mappings: {},
+            resource: this.config?.resource || '',
+            mappings: this.config?.map || {},
             saving: false,
         };
     },
@@ -98,7 +98,8 @@ export default {
         'fields',
         'file',
         'rows',
-        'total_rows'
+        'total_rows',
+        'config',
     ],
 
     watch: {
