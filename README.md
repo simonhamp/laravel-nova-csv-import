@@ -1,12 +1,24 @@
 # Laravel Nova CSV Import
 
-[![Latest Stable Version](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/v/stable)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
-[![Total Downloads](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/downloads)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
-[![License](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/license)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
+[![Latest Stable Version](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/v/stable?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
+[![Total Downloads](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/downloads?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
+[![License](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/license?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
 
-A simple CSV import tool for Laravel Nova. This package builds on top of the great work done by Sparclex with the [nova-import-card](https://github.com/Sparclex/nova-import-card) package.
+A simple CSV import tool for Laravel Nova that allows you to upload a CSV file via Nova and choose which Nova resource
+to import it to.
+
+The import process lets you choose how to map the relevant columns from your uploaded file to the attributes on your
+models, with a nice summary at the end of what worked and what didn't
+
+> This package builds on top of the great work done by Sparclex with the [nova-import-card](https://github.com/Sparclex/nova-import-card) package.
 
 ![Laravel Nova CSV Import Screenshot](https://raw.githubusercontent.com/simonhamp/laravel-nova-csv-import/master/screenshots/readme.png)
+
+## Sponsorship
+CSV Import is completely free to use. I've built it in my own time to fill my own needs and I also support it in my own
+time. If you'd like to show your appreciation for that, I do accept [donations via GitHub](https://github.com/sponsors/simonhamp).
+
+Thank you 🙏
 
 ## Installation
 
@@ -17,7 +29,7 @@ composer require simonhamp/laravel-nova-csv-import --with-all-dependencies
 ```
 
 Once installed, you must register the component in your app's `NovaServiceProvider`
-(`app/Providers/NovaServiceProvider.php`):
+(usually in `app/Providers/NovaServiceProvider.php`):
 
 ```php
 namespace App\Providers;
@@ -36,7 +48,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 ```
 
 ## Options
-By default, all of your Nova Resources will be available for import. However, there are a number of ways that you can
+By default, _all_ of your Nova Resources will be available for import. However, there are a number of ways that you can
 explicitly limit what's available for importing.
 
 `public static $canImportResource = false;`  
