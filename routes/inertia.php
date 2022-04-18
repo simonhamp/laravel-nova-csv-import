@@ -19,9 +19,5 @@ Route::get('/', function (NovaRequest $request) {
 })->name('csv-import.home');
 
 Route::get('/configure/{file}', 'ImportController@configure')->name('csv-import.configure');
-
 Route::get('/preview/{file}', 'ImportController@preview')->name('csv-import.preview');
-
-Route::get('/review', function (NovaRequest $request) {
-    return inertia('CsvImport/Review');
-})->name('csv-import.review');
+Route::get('/review/{file}', 'ImportController@review')->name('csv-import.review');
