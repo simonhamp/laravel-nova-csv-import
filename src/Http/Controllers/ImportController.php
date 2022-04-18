@@ -99,6 +99,12 @@ class ImportController
         $rules = $this->extractValidationRules($request, $resource)->toArray();
         $model_class = get_class($resource->resource);
 
+        $import = $this->importer
+            ->toCollection($this->getFilePath($file), null)
+            ->first();
+
+        $total_rows = $import->count();
+
         $this->importer
             ->setResource($resource)
             ->setAttributeMap($attribute_map)
@@ -106,35 +112,27 @@ class ImportController
             ->setModelClass($model_class)
             ->import($this->getFilePath($file), null);
 
-        if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
-            Storage::put("csv-import/{$file}.results.json", json_encode([
-                'errors' => $this->importer->errors(),
-                'failures' => $this->importer->failures()
-            ]));
-        }
+        $failures = $this->importer->failures();
+        $errors = $this->importer->errors();
+
+        Storage::put("csv-import/{$file}.results.json", json_encode([
+            'total_rows' => $total_rows,
+            'imported' => $total_rows - $failures->count() - $errors->count(),
+            'failures' => $failures,
+            'errors' => $errors,
+        ]));
 
         return response()->json(['review' => "/csv-import/review/{$file}"]);
     }
 
     public function review(NovaRequest $request, $file)
     {
-        $import = $this->importer
-            ->toCollection($this->getFilePath($file), null)
-            ->first();
-
-        $total_rows = $import->count();
-
         $results = $this->getLastResultsForFile($file);
 
-        $failures = collect();
-        $errors = collect();
-
-        if ($results) {
-            $failures = collect($results['failures'])->groupBy('row');
-            $errors = collect($results['errors'])->groupBy('row');
-        }
-
-        $imported = $total_rows - $failures->count() - $errors->count();
+        $imported = $results['imported'];
+        $total_rows = $results['total_rows'];
+        $failures = collect($results['failures'])->groupBy('row');
+        $errors = collect($results['errors'])->groupBy('row');
 
         $config = $this->getConfigForFile($file);
 
