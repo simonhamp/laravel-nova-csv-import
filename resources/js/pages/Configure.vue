@@ -21,7 +21,7 @@
 
                 <div class="overflow-scroll">
                     <table cellpadding="10">
-                        <thead>
+                        <thead class="border-b">
                             <tr>
                                 <th v-for="heading in headings"><span class="font-bold">{{ heading }}</span></th>
                             </tr>
@@ -54,7 +54,7 @@
                 </div>
 
                 <table cellpadding="10" v-if="resource">
-                    <thead>
+                    <thead class="border-b">
                         <tr>
                             <th>Fields</th>
                             <th>Columns</th>

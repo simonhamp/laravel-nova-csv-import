@@ -21,9 +21,8 @@
                     {{ showFailures ? 'Hide failures' : 'Show failures' }}
                 </BasicButton>
                 <div v-if="showFailures">
-                    <h2>Failures</h2>
                     <table cellpadding="10">
-                        <thead>
+                        <thead class="border-b">
                             <tr>
                                 <th>Row #</th>
                                 <th>Attribute</th>
@@ -35,7 +34,7 @@
                         <tbody>
                             <template v-for="(row, rowIndex) in failures">
                                 <tr v-for="(problem, index) in row" :class="{'border-b': index === row.length - 1}">
-                                    <td v-if="index === 0" :rowspan="row.length" valign="top">
+                                    <td v-if="index === 0" :rowspan="row.length" valign="top" align="right">
                                         {{ problem.row - 1 }}
                                     </td>
                                     <td valign="top">
@@ -78,9 +77,8 @@
                     {{ showErrors ? 'Hide errors' : 'Show errors' }}
                 </BasicButton>
                 <div v-if="showErrors">
-                    <h2>Errors</h2>
                     <table cellpadding="10">
-                        <thead>
+                        <thead class="border-b">
                             <tr>
                                 <th>Row #</th>
                                 <th>Attribute</th>
@@ -92,7 +90,7 @@
                         <tbody>
                             <template v-for="(row, rowIndex) in errors">
                                 <tr v-for="(problem, index) in row" :class="{'border-b': index === row.length - 1}">
-                                    <td v-if="index === 0" :rowspan="row.length" valign="top">
+                                    <td v-if="index === 0" :rowspan="row.length" valign="top" align="right">
                                         {{ problem.row - 1 }}
                                     </td>
                                     <td valign="top">
