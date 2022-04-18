@@ -35,6 +35,8 @@ class ImportController
 
         $total_rows = $import->count();
 
+        $config = $this->getConfigForFile($file);
+
         $rows = $import->take(10)->all();
 
         $resources = $this->getAvailableResourcesForImport($request); 
@@ -47,7 +49,7 @@ class ImportController
             return [$resource::uriKey() => $resource::label()];
         });
 
-        return inertia('CsvImport/Configure', compact('file', 'resources', 'fields', 'rows', 'total_rows', 'headings'));
+        return inertia('CsvImport/Configure', compact('file', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config'));
     }
 
     public function storeConfig(NovaRequest $request)
@@ -73,15 +75,73 @@ class ImportController
         $config = $this->getConfigForFile($file);
 
         $columns = $config['map'];
+        $resource = $config['resource'];
 
         $mapped_columns = array_values(array_filter($config['map']));
 
         $rows = $import->take(100)->all();
 
-        return inertia('CsvImport/Preview', compact('config', 'rows', 'total_rows', 'columns', 'mapped_columns'));
+        return inertia('CsvImport/Preview', compact('config', 'rows', 'total_rows', 'columns', 'mapped_columns', 'resource', 'file'));
     }
 
-    public function getAvailableFieldsForImport(String $resource, $request)
+    public function import(NovaRequest $request)
+    {
+        $file = $request->input('file');
+
+        Storage::delete("csv-import/{$file}.results.json");
+
+        $config = $this->getConfigForFile($file);
+        $resource_name = $config['resource'];
+        $attribute_map = $config['map'];
+
+        $resource = Nova::resourceInstanceForKey($resource_name);
+        $attributes = $resource->creationFields($request)->pluck('attribute');
+        $rules = $this->extractValidationRules($request, $resource)->toArray();
+        $model_class = get_class($resource->resource);
+
+        $this->importer
+            ->setResource($resource)
+            ->setAttributeMap($attribute_map)
+            ->setRules($rules)
+            ->setModelClass($model_class)
+            ->import($this->getFilePath($file), null);
+
+        if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
+            Storage::put("csv-import/{$file}.results.json", json_encode([
+                'errors' => $this->importer->errors(),
+                'failures' => $this->importer->failures()
+            ]));
+        }
+
+        return response()->json(['review' => "/csv-import/review/{$file}"]);
+    }
+
+    public function review(NovaRequest $request, $file)
+    {
+        $import = $this->importer
+            ->toCollection($this->getFilePath($file), null)
+            ->first();
+
+        $total_rows = $import->count();
+
+        $results = $this->getLastResultsForFile($file);
+
+        $failures = collect();
+        $errors = collect();
+
+        if ($results) {
+            $failures = collect($results['failures'])->groupBy('row');
+            $errors = collect($results['errors'])->groupBy('row');
+        }
+
+        $imported = $total_rows - $failures->count() - $errors->count();
+
+        $config = $this->getConfigForFile($file);
+
+        return inertia('CsvImport/Review', compact('file', 'failures', 'errors', 'total_rows', 'config', 'imported'));
+    }
+
+    protected function getAvailableFieldsForImport(String $resource, $request)
     {
         $novaResource = new $resource(new $resource::$model);
         $fieldsCollection = collect($novaResource->creationFields($request));
@@ -104,7 +164,7 @@ class ImportController
         return [$novaResource->uriKey() => $fields->values()];
     }
 
-    public function getAvailableResourcesForImport(NovaRequest $request) {
+    protected function getAvailableResourcesForImport(NovaRequest $request) {
 
         $novaResources = collect(Nova::authorizedResources($request));
 
@@ -133,39 +193,6 @@ class ImportController
         });
     }
 
-    public function import(NovaRequest $request)
-    {
-        $file = $request->input('file');
-        $config = $this->getConfigForFile($file);
-        $resource_name = $config['resource'];
-
-        $resource = Nova::resourceInstanceForKey($resource_name);
-        $attribute_map = $config['map'];
-        $attributes = $resource->creationFields($request)->pluck('attribute');
-        $rules = $this->extractValidationRules($request, $resource)->toArray();
-        $model_class = get_class($resource->resource);
-
-        $this->importer
-            ->setResource($resource)
-            ->setAttributes($attributes)
-            ->setAttributeMap($attribute_map)
-            ->setRules($rules)
-            ->setModelClass($model_class)
-            ->import($this->getFilePath($file), null);
-
-        if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
-            return response()->json(
-                [
-                    'errors' => $this->importer->errors(),
-                    'failures' => $this->importer->failures()
-                ],
-                422
-            );
-        }
-
-        return response()->json(['summary' => "/csv-import/summary/{$file}"]);
-    }
-
     protected function extractValidationRules($request, Resource $resource)
     {
         return collect($resource::rulesForCreation($request))->mapWithKeys(function ($rule, $key) {
@@ -192,15 +219,13 @@ class ImportController
         return json_decode(Storage::get("csv-import/{$file}.config.json"), true);
     }
 
+    protected function getLastResultsForFile($file)
+    {
+        return json_decode(Storage::get("csv-import/{$file}.results.json"), true);
+    }
+
     protected function getFilePath($file)
     {
         return storage_path("app/csv-import/{$file}");
-    }
-
-    private function responseError($error)
-    {
-        throw ValidationException::withMessages([
-            0 => [$error],
-        ]);
     }
 }
