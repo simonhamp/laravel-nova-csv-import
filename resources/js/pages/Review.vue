@@ -6,7 +6,7 @@
 
         <heading class="mb-6">CSV Import - Review</heading>
 
-        <card class="p-4 space-y-4" style="min-height: 300px">
+        <card class="p-8 space-y-4" style="min-height: 300px">
             <p>
                 <b>{{ imported }}</b> row(s) out of {{ total_rows }} were successfully imported.
             </p>
@@ -27,8 +27,8 @@
                             <tr>
                                 <th>Row #</th>
                                 <th>Attribute</th>
-                                <th>Details</th>
                                 <th>Data</th>
+                                <th>Details</th>
                                 <th>Row Data</th>
                             </tr>
                         </thead>
@@ -42,11 +42,13 @@
                                         {{ problem.attribute }}
                                     </td>
                                     <td valign="top">
-                                        <div v-for="error in problem.errors">{{ error }}</div>
+                                        <code>
+                                            {{ problem.values[problem.attribute] }}
+                                            <i v-if="! problem.values[problem.attribute]">null</i>
+                                        </code>
                                     </td>
                                     <td valign="top">
-                                        {{ problem.values[config.map[problem.attribute]] }}
-                                        <i v-if="! problem.values[config.map[problem.attribute]]">null</i>
+                                        <div v-for="error in problem.errors">{{ error }}</div>
                                     </td>
                                     <td :rowspan="row.length" valign="top">
                                         <div v-if="index === 0">
@@ -55,7 +57,11 @@
                                             </BasicButton>
                                             <div v-show="showFailureData[rowIndex]">
                                                 <div v-for="(value, key) in problem.values">
-                                                    {{ key }}: {{ value }}
+                                                    {{ config.map[key] }} &rightarrow; {{ key }} :
+                                                    <code>
+                                                        {{ value }}
+                                                        <i v-if="! value">null</i>
+                                                    </code>
                                                 </div>
                                             </div>
                                         </div>
@@ -78,8 +84,8 @@
                             <tr>
                                 <th>Row #</th>
                                 <th>Attribute</th>
-                                <th>Details</th>
                                 <th>Data</th>
+                                <th>Details</th>
                                 <th>Row Data</th>
                             </tr>
                         </thead>
@@ -93,11 +99,13 @@
                                         {{ problem.attribute }}
                                     </td>
                                     <td valign="top">
-                                        <div v-for="error in problem.errors">{{ error }}</div>
+                                        <code>
+                                            {{ problem.values[problem.attribute] }}
+                                            <i v-if="! problem.values[problem.attribute]">null</i>
+                                        </code>
                                     </td>
                                     <td valign="top">
-                                        {{ problem.values[config.map[problem.attribute]] }}
-                                        <i v-if="! problem.values[config.map[problem.attribute]]">null</i>
+                                        <div v-for="error in problem.errors">{{ error }}</div>
                                     </td>
                                     <td :rowspan="row.length" valign="top">
                                         <div v-if="index === 0">
@@ -106,7 +114,11 @@
                                             </BasicButton>
                                             <div v-show="showErrorData[rowIndex]">
                                                 <div v-for="(value, key) in problem.values">
-                                                    {{ key }}: {{ value }}
+                                                    {{ config.map[key] }} &rightarrow; {{ key }} :
+                                                    <code>
+                                                        {{ value }}
+                                                        <i v-if="! value">null</i>
+                                                    </code>
                                                 </div>
                                             </div>
                                         </div>
@@ -128,10 +140,6 @@
 
 <script>
 export default {
-    mounted() {
-        console.log(this.failures.length === 0);
-        console.log(this.errors.length === 0);
-    },
     props: [
         'failures',
         'errors',

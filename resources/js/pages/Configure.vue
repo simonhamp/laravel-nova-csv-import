@@ -28,7 +28,12 @@
                         </thead>
                         <tbody>
                             <tr v-for="row in rows">
-                                <td v-for="col in row">{{ col }}</td>
+                                <td v-for="col in row">
+                                    <code>
+                                        {{ col }}
+                                        <i v-if="! col">null</i>
+                                    </code>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

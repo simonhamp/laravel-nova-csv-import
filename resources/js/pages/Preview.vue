@@ -27,7 +27,12 @@
                     <tbody>
                         <tr v-for="(row, index) in rows">
                             <td class="text-right border-r">{{ index + 1 }}</td>
-                            <td v-for="column in columns">{{ row[column] }}</td>
+                            <td v-for="column in columns">
+                                <code>
+                                    {{ row[column] }}
+                                    <i v-if="! row[column]">null</i>
+                                </code>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
