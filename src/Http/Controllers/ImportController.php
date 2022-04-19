@@ -10,6 +10,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use SimonHamp\LaravelNovaCsvImport\Importer;
 use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Fields\Field;
+use Illuminate\Support\Facades\Storage;
 
 class ImportController
 {
@@ -24,7 +25,7 @@ class ImportController
         $this->importer = new $class;
     }
 
-    public function preview(NovaRequest $request, $file)
+    public function configure(NovaRequest $request, $file)
     {
         $import = $this->importer
             ->toCollection($this->getFilePath($file), null)
@@ -34,7 +35,9 @@ class ImportController
 
         $total_rows = $import->count();
 
-        $sample = $import->take(10)->all();
+        $config = $this->getConfigForFile($file);
+
+        $rows = $import->take(10)->all();
 
         $resources = $this->getAvailableResourcesForImport($request); 
 
@@ -46,10 +49,97 @@ class ImportController
             return [$resource::uriKey() => $resource::label()];
         });
 
-        return response()->json(compact('sample', 'resources', 'fields', 'total_rows', 'headings'));
+        return inertia('CsvImport/Configure', compact('file', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config'));
     }
 
-    public function getAvailableFieldsForImport(String $resource, $request)
+    public function storeConfig(NovaRequest $request)
+    {
+        $config = json_encode([
+            'resource' => $request->input('resource'),
+            'map' => $request->input('map'),
+        ]);
+
+        $file = $request->input('file');
+
+        Storage::put("csv-import/{$file}.config.json", $config);
+    }
+
+    public function preview(NovaRequest $request, $file)
+    {
+        $import = $this->importer
+            ->toCollection($this->getFilePath($file), null)
+            ->first();
+
+        $total_rows = $import->count();
+
+        $config = $this->getConfigForFile($file);
+
+        $columns = $config['map'];
+        $resource = $config['resource'];
+
+        $mapped_columns = array_values(array_filter($config['map']));
+
+        $rows = $import->take(100)->all();
+
+        return inertia('CsvImport/Preview', compact('config', 'rows', 'total_rows', 'columns', 'mapped_columns', 'resource', 'file'));
+    }
+
+    public function import(NovaRequest $request)
+    {
+        $file = $request->input('file');
+
+        Storage::delete("csv-import/{$file}.results.json");
+
+        $config = $this->getConfigForFile($file);
+        $resource_name = $config['resource'];
+        $attribute_map = $config['map'];
+
+        $resource = Nova::resourceInstanceForKey($resource_name);
+        $attributes = $resource->creationFields($request)->pluck('attribute');
+        $rules = $this->extractValidationRules($request, $resource)->toArray();
+        $model_class = get_class($resource->resource);
+
+        $import = $this->importer
+            ->toCollection($this->getFilePath($file), null)
+            ->first();
+
+        $total_rows = $import->count();
+
+        $this->importer
+            ->setResource($resource)
+            ->setAttributeMap($attribute_map)
+            ->setRules($rules)
+            ->setModelClass($model_class)
+            ->import($this->getFilePath($file), null);
+
+        $failures = $this->importer->failures();
+        $errors = $this->importer->errors();
+
+        Storage::put("csv-import/{$file}.results.json", json_encode([
+            'total_rows' => $total_rows,
+            'imported' => $total_rows - $failures->count() - $errors->count(),
+            'failures' => $failures,
+            'errors' => $errors,
+        ]));
+
+        return response()->json(['review' => "/csv-import/review/{$file}"]);
+    }
+
+    public function review(NovaRequest $request, $file)
+    {
+        $results = $this->getLastResultsForFile($file);
+
+        $imported = $results['imported'];
+        $total_rows = $results['total_rows'];
+        $failures = collect($results['failures'])->groupBy('row');
+        $errors = collect($results['errors'])->groupBy('row');
+
+        $config = $this->getConfigForFile($file);
+
+        return inertia('CsvImport/Review', compact('file', 'failures', 'errors', 'total_rows', 'config', 'imported'));
+    }
+
+    protected function getAvailableFieldsForImport(String $resource, $request)
     {
         $novaResource = new $resource(new $resource::$model);
         $fieldsCollection = collect($novaResource->creationFields($request));
@@ -61,70 +151,44 @@ class ImportController
         }
 
         $fields = $fieldsCollection->map(function (Field $field) {
-                    return [
-                        'name' => $field->name,
-                        'attribute' => $field->attribute
-                    ];
-                });
+            return [
+                'name' => $field->name,
+                'attribute' => $field->attribute
+            ];
+        });
         
         // Note: ->values() is used here to avoid this array being turned into an object due to 
         // non-sequential keys (which might happen due to the filtering above.
         return [$novaResource->uriKey() => $fields->values()];
     }
 
-    public function getAvailableResourcesForImport(NovaRequest $request) {
+    protected function getAvailableResourcesForImport(NovaRequest $request) {
 
         $novaResources = collect(Nova::authorizedResources($request));
 
         return $novaResources->filter(function ($resource) use ($request) {
-                    if ($resource === ActionResource::class) {
-                        return false;
-                    }
+            if ($resource === ActionResource::class) {
+                return false;
+            }
 
-                    if (!isset($resource::$model)) {
-                        return false;
-                    }
-                    
-                    $resourceReflection = (new \ReflectionClass((string) $resource));
-                    
-                    if ($resourceReflection->hasMethod('canImportResource')) {
-                        return $resource::canImportResource($request);
-                    }
+            if (!isset($resource::$model)) {
+                return false;
+            }
+            
+            $resourceReflection = (new \ReflectionClass((string) $resource));
+            
+            if ($resourceReflection->hasMethod('canImportResource')) {
+                return $resource::canImportResource($request);
+            }
 
-                    $static_vars = $resourceReflection->getStaticProperties();
+            $static_vars = $resourceReflection->getStaticProperties();
 
-                    if (!isset($static_vars['canImportResource'])) {
-                        return true;
-                    }
+            if (!isset($static_vars['canImportResource'])) {
+                return true;
+            }
 
-                    return isset($static_vars['canImportResource']) && $static_vars['canImportResource'];
-                });
-    }
-
-    public function import(NovaRequest $request, $file)
-    {
-        $resource_name = $request->input('resource');
-        $request->route()->setParameter('resource', $resource_name);
-
-        $resource = Nova::resourceInstanceForKey($resource_name);
-        $attribute_map = $request->input('mappings');
-        $attributes = $resource->creationFields($request)->pluck('attribute');
-        $rules = $this->extractValidationRules($request, $resource)->toArray();
-        $model_class = get_class($resource->resource);
-
-        $this->importer
-            ->setResource($resource)
-            ->setAttributes($attributes)
-            ->setAttributeMap($attribute_map)
-            ->setRules($rules)
-            ->setModelClass($model_class)
-            ->import($this->getFilePath($file), null);
-
-        if (! $this->importer->failures()->isEmpty() || ! $this->importer->errors()->isEmpty()) {
-            return response()->json(['result' => 'failure', 'errors' => $this->importer->errors(), 'failures' => $this->importer->failures()]);
-        }
-
-        return response()->json(['result' => 'success']);
+            return isset($static_vars['canImportResource']) && $static_vars['canImportResource'];
+        });
     }
 
     protected function extractValidationRules($request, Resource $resource)
@@ -148,15 +212,18 @@ class ImportController
         });
     }
 
-    protected function getFilePath($file)
+    protected function getConfigForFile($file)
     {
-        return storage_path("nova/laravel-nova-import-csv/tmp/{$file}");
+        return json_decode(Storage::get("csv-import/{$file}.config.json"), true);
     }
 
-    private function responseError($error)
+    protected function getLastResultsForFile($file)
     {
-        throw ValidationException::withMessages([
-            0 => [$error],
-        ]);
+        return json_decode(Storage::get("csv-import/{$file}.results.json"), true);
+    }
+
+    protected function getFilePath($file)
+    {
+        return storage_path("app/csv-import/{$file}");
     }
 }

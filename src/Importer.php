@@ -21,18 +21,33 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
 
     /** @var Resource */
     protected $resource;
-    protected $attributes;
     protected $attribute_map;
     protected $rules;
     protected $model_class;
 
-    public function map($row): array { 
-        return $this->mapRowDataToAttributes($row);
+    public function map($row): array
+    {
+        if (! $this->attribute_map) {
+            return $row;
+        }
+
+        $data = [];
+
+        foreach ($this->attribute_map as $attribute => $column) {
+            if (! $column) {
+                continue;
+            }
+
+            $data[$attribute] = $this->preProcessValue($row[$column]);
+        }
+
+        return $data;
     }
 
     public function model(array $row)
     {
         $model = $this->resource::newModel();
+
         $model->fill($row);
 
         return $model;
@@ -51,25 +66,6 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
     public function chunkSize(): int
     {
         return 100;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @param mixed $attributes
-     * @return Importer
-     */
-    public function setAttributes($attributes)
-    {
-        $this->attributes = $attributes;
-
-        return $this;
     }
 
     /**
@@ -126,25 +122,6 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         $this->resource = $resource;
 
         return $this;
-    }
-
-    private function mapRowDataToAttributes($row)
-    {
-        $data = [];
-
-        foreach ($this->attributes as $field) {
-            $data[$field] = null;
-
-            foreach ($this->attribute_map as $column => $attribute) {
-                if (! isset($row[$column]) || $field !== $attribute) {
-                    continue;
-                }
-
-                $data[$field] = $this->preProcessValue($row[$column]);
-            }
-        }
-
-        return $data;
     }
 
     private function preProcessValue($value)

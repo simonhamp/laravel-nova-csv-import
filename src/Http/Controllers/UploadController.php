@@ -2,6 +2,7 @@
 
 namespace SimonHamp\LaravelNovaCsvImport\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -24,14 +25,15 @@ class UploadController
         try {
             (new Importer)->toCollection($file, null);
         } catch (\Exception $e) {
-            return response()->json(['result' => 'error', 'message' => 'Sorry, we could not import that file'], 422);
+            Log::error('Failed to parse uploaded file', [$e]);
+            return response()->json(['message' => 'Sorry, we could not import that file'], 422);
         }
 
         // Store the file temporarily
         $hash = File::hash($file->getRealPath()).".".$extension;
 
-        $file->move(storage_path('nova/laravel-nova-import-csv/tmp'), $hash);
+        $file->move(storage_path('app/csv-import'), $hash);
 
-        return response()->json(['result' => 'success', 'file' => $hash]);
+        return response()->json(['configure' => "/csv-import/configure/{$hash}"]);
     }
 }
