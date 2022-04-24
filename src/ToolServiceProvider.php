@@ -31,8 +31,8 @@ class ToolServiceProvider extends ServiceProvider
         });
 
         $this->publishes([
-            __DIR__.'/config.php' => config_path('nova-csv-importer.php')
-        ], 'nova-csv-import');
+            __DIR__.'/../config/csv-import.php' => config_path('csv-import.php')
+        ], 'csv-import');
     }
 
     /**
@@ -63,18 +63,18 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/config.php', 'nova-csv-importer');
+        $this->mergeConfigFrom(__DIR__.'/../config/csv-import.php', 'csv-import');
 
         $this->app->when([UploadController::class, ImportController::class])
             ->needs(Filesystem::class)
             ->give(function () {
-                return Storage::disk(config('nova-csv-import.disk'));
+                return Storage::disk(config('csv-import.disk'));
             });
 
         $this->app->when([UploadController::class, ImportController::class])
             ->needs(ModelImporter::class)
             ->give(function () {
-                $class = $this->app['config']->get('nova-csv-importer.importer');
+                $class = $this->app['config']->get('csv-importer.importer');
 
                 $importable = \Maatwebsite\Excel\Concerns\Importable::class;
 
