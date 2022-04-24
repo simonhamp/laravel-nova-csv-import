@@ -154,7 +154,9 @@ class ImportController
 
     public function review(NovaRequest $request, string $file): Response
     {
-        $results = $this->getLastResultsForFile($file);
+        if (! $results = $this->getLastResultsForFile($file)) {
+            return redirect()->route('csv-import.preview', ['file' => $file]);
+        }
 
         $imported = $results['imported'];
         $total_rows = $results['total_rows'];
