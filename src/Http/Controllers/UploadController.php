@@ -6,13 +6,12 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Concerns\Importable;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
+use Symfony\Component\HttpFoundation\Response;
 
 class UploadController
 {
-    use Importable;
     protected $importer;
 
     protected $filesystem;
@@ -23,6 +22,8 @@ class UploadController
 
         $this->filesystem = $filesystem;
     }
+
+    public function handle(NovaRequest $request): Response
     {
         $data = Validator::make($request->all(), [
             'file' => 'required|file',
@@ -38,11 +39,15 @@ class UploadController
             return response()->json(['message' => 'Sorry, we could not import that file'], 422);
         }
 
-        // Store the file temporarily
-        $hash = File::hash($file->getRealPath()).".".$extension;
+        $newFile = implode('.', [
+            File::hash($file->getRealPath()),
+            $file->getClientOriginalExtension()
+        ]);
 
         $this->filesystem->putFileAs('csv-import', $file, $newFile);
 
-        return response()->json(['configure' => "/csv-import/configure/{$hash}"]);
+        return response()->json([
+            'configure' => "/csv-import/configure/{$newFile}"
+        ]);
     }
 }

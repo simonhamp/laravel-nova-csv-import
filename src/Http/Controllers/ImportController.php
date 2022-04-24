@@ -2,8 +2,10 @@
 
 namespace SimonHamp\LaravelNovaCsvImport\Http\Controllers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Validation\ValidationException;
+use Inertia\Response;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
 use Laravel\Nova\Fields\Field;
@@ -49,11 +51,20 @@ class ImportController
             return [$resource::uriKey() => $resource::label()];
         });
 
-        return inertia('CsvImport/Configure', compact('file', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config'));
+        return inertia(
+            'CsvImport/Configure',
+            compact('file', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config')
+        );
     }
 
+    /**
+     * 
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function storeConfig(NovaRequest $request)
     {
+        // TODO: Add some validation
         $config = json_encode([
             'resource' => $request->input('resource'),
             'map' => $request->input('map'),
@@ -87,7 +98,10 @@ class ImportController
 
         $rows = $import->take(100)->all();
 
-        return inertia('CsvImport/Preview', compact('config', 'rows', 'total_rows', 'columns', 'mapped_columns', 'resource', 'file'));
+        return inertia(
+            'CsvImport/Preview',
+            compact('config', 'rows', 'total_rows', 'columns', 'mapped_columns', 'resource', 'file')
+        );
     }
 
     public function import(NovaRequest $request)
@@ -138,7 +152,7 @@ class ImportController
         return response()->json(['review' => "/csv-import/review/{$file}"]);
     }
 
-    public function review(NovaRequest $request, $file)
+    public function review(NovaRequest $request, string $file): Response
     {
         $results = $this->getLastResultsForFile($file);
 
@@ -149,10 +163,13 @@ class ImportController
 
         $config = $this->getConfigForFile($file);
 
-        return inertia('CsvImport/Review', compact('file', 'failures', 'errors', 'total_rows', 'config', 'imported'));
+        return inertia(
+            'CsvImport/Review',
+            compact('file', 'failures', 'errors', 'total_rows', 'config', 'imported')
+        );
     }
 
-    protected function getAvailableFieldsForImport(String $resource, $request)
+    protected function getAvailableFieldsForImport(string $resource, NovaRequest $request): array
     {
         $novaResource = new $resource(new $resource::$model);
         $fieldsCollection = collect($novaResource->creationFields($request));
@@ -172,11 +189,13 @@ class ImportController
         
         // Note: ->values() is used here to avoid this array being turned into an object due to 
         // non-sequential keys (which might happen due to the filtering above.
-        return [$novaResource->uriKey() => $fields->values()];
+        return [
+            $novaResource->uriKey() => $fields->values(),
+        ];
     }
 
-    protected function getAvailableResourcesForImport(NovaRequest $request) {
-
+    protected function getAvailableResourcesForImport(NovaRequest $request): Collection
+    {
         $novaResources = collect(Nova::authorizedResources($request));
 
         return $novaResources->filter(function ($resource) use ($request) {
@@ -204,7 +223,7 @@ class ImportController
         });
     }
 
-    protected function extractValidationRules($request, Resource $resource)
+    protected function extractValidationRules(Resource $resource, NovaRequest $request): Collection
     {
         return collect($resource::rulesForCreation($request))->mapWithKeys(function ($rule, $key) {
             foreach ($rule as $i => $r) {
