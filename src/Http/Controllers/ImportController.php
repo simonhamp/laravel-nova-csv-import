@@ -283,6 +283,6 @@ class ImportController
 
     protected function getDisk(): ?string
     {
-        return config('nova-csv-import.disk');
+        return config('csv-import.disk');
     }
 }
