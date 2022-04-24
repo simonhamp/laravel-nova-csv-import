@@ -67,8 +67,8 @@ class ImportController
         // TODO: Add some validation
         $config = json_encode([
             'resource' => $request->input('resource'),
-            'map' => $request->input('map'),
-        ]);
+            'mappings' => $request->input('mappings'),
+        ]);;
 
         $file = $request->input('file');
 
@@ -91,10 +91,10 @@ class ImportController
 
         $config = $this->getConfigForFile($file);
 
-        $columns = $config['map'];
+        $columns = $config['mappings'];
         $resource = $config['resource'];
 
-        $mapped_columns = array_values(array_filter($config['map']));
+        $mapped_columns = array_values(array_filter($columns));
 
         $rows = $import->take(100)->all();
 
@@ -115,7 +115,7 @@ class ImportController
         }
 
         $resource_name = $config['resource'];
-        $attribute_map = $config['map'];
+        $attribute_map = $config['mappings'];
 
         $resource = Nova::resourceInstanceForKey($resource_name);
         $attributes = $resource->creationFields($request)->pluck('attribute');

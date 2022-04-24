@@ -93,7 +93,7 @@ export default {
     data() {
         return {
             resource: this.config?.resource || '',
-            mappings: this.config?.map || {},
+            mappings: this.config?.mappings || {},
             saving: false,
         };
     },
@@ -113,7 +113,7 @@ export default {
             handler(newValue) {
                 const fields = this.fields[newValue];
 
-                // Reset all of the headings to blanks
+                // Reset all of the mappings
                 for (let {name, attribute} of fields) {
                     this.mappings[attribute] = "";
                 }
@@ -130,6 +130,7 @@ export default {
                         continue;
                     }
 
+                    // Because they're an exact match, we don't need to get the exact heading out
                     this.mappings[attribute] = attribute;
                 }
             },
@@ -147,7 +148,7 @@ export default {
 
             let data = {
                 resource: this.resource,
-                map: this.mappings,
+                mappings: this.mappings,
                 file: this.file,
             };
 
