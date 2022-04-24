@@ -5,8 +5,13 @@ namespace SimonHamp\LaravelNovaCsvImport;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
 use SimonHamp\LaravelNovaCsvImport\Http\Middleware\Authorize;
+use SimonHamp\LaravelNovaCsvImport\Http\Controllers\ImportController;
+use SimonHamp\LaravelNovaCsvImport\Http\Controllers\UploadController;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -59,5 +64,25 @@ class ToolServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/config.php', 'nova-csv-importer');
+
+        $this->app->when([UploadController::class, ImportController::class])
+            ->needs(Filesystem::class)
+            ->give(function () {
+                return Storage::disk(config('nova-csv-import.disk'));
+            });
+
+        $this->app->when([UploadController::class, ImportController::class])
+            ->needs(ModelImporter::class)
+            ->give(function () {
+                $class = $this->app['config']->get('nova-csv-importer.importer');
+
+                $importable = \Maatwebsite\Excel\Concerns\Importable::class;
+
+                if (! in_array($importable, class_uses($class))) {
+                    throw new \Exception("Importer [{$class}] must use the Importable trait: {$importable}");
+                }
+
+                return $this->app->make($class);
+            });
     }
 }

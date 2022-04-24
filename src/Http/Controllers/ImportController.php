@@ -2,33 +2,33 @@
 
 namespace SimonHamp\LaravelNovaCsvImport\Http\Controllers;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
+use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Rules\Relatable;
 use Laravel\Nova\Actions\ActionResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use SimonHamp\LaravelNovaCsvImport\Importer;
-use Illuminate\Validation\ValidationException;
-use Laravel\Nova\Fields\Field;
-use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
 
 class ImportController
 {
-    /**
-     * @var Importer
-     */
     protected $importer;
 
-    public function __construct()
+    protected $filesystem;
+
+    public function __construct(ModelImporter $importer, Filesystem $filesystem)
     {
-        $class = config('nova-csv-importer.importer');
-        $this->importer = new $class;
+        $this->importer = $importer;
+
+        $this->filesystem = $filesystem;
     }
 
-    public function configure(NovaRequest $request, $file)
+    public function configure(NovaRequest $request, string $file): Response
     {
         $import = $this->importer
-            ->toCollection($this->getFilePath($file), null)
+            ->toCollection($this->getFilePath($file), $this->getDisk())
             ->first();
 
         $headings = $import->first()->keys();
@@ -61,13 +61,19 @@ class ImportController
 
         $file = $request->input('file');
 
-        Storage::put("csv-import/{$file}.config.json", $config);
+        $path = $this->getConfigFilePath($file);
+
+        $this->filesystem->delete($path);
+
+        if (! $this->filesystem->put($path, $config)) {
+            return abort(500);
+        }
     }
 
-    public function preview(NovaRequest $request, $file)
+    public function preview(NovaRequest $request, string $file): Response
     {
         $import = $this->importer
-            ->toCollection($this->getFilePath($file), null)
+            ->toCollection($this->getFilePath($file), $this->getDisk())
             ->first();
 
         $total_rows = $import->count();
@@ -88,9 +94,12 @@ class ImportController
     {
         $file = $request->input('file');
 
-        Storage::delete("csv-import/{$file}.results.json");
+        $path = $this->getFilePath($file);
 
-        $config = $this->getConfigForFile($file);
+        if (! $config = $this->getConfigForFile($file)) {
+            return redirect()->route('csv-import.configure', ['file' => $file]);
+        }
+
         $resource_name = $config['resource'];
         $attribute_map = $config['map'];
 
@@ -100,7 +109,7 @@ class ImportController
         $model_class = get_class($resource->resource);
 
         $import = $this->importer
-            ->toCollection($this->getFilePath($file), null)
+            ->toCollection($path, $this->getDisk())
             ->first();
 
         $total_rows = $import->count();
@@ -110,12 +119,16 @@ class ImportController
             ->setAttributeMap($attribute_map)
             ->setRules($rules)
             ->setModelClass($model_class)
-            ->import($this->getFilePath($file), null);
+            ->import($path, $this->getDisk());
 
         $failures = $this->importer->failures();
         $errors = $this->importer->errors();
 
-        Storage::put("csv-import/{$file}.results.json", json_encode([
+        $results = $this->getResultsFilePath($file);
+
+        $this->filesystem->delete($results);
+
+        $this->filesystem->put($results, json_encode([
             'total_rows' => $total_rows,
             'imported' => $total_rows - $failures->count() - $errors->count(),
             'failures' => $failures,
@@ -212,18 +225,42 @@ class ImportController
         });
     }
 
-    protected function getConfigForFile($file)
+    protected function getConfigForFile(string $file): array
     {
-        return json_decode(Storage::get("csv-import/{$file}.config.json"), true);
+        return $this->getDataFromJsonFile($this->getConfigFilePath($file));
     }
 
-    protected function getLastResultsForFile($file)
+    protected function getLastResultsForFile(string $file): array
     {
-        return json_decode(Storage::get("csv-import/{$file}.results.json"), true);
+        return $this->getDataFromJsonFile($this->getResultsFilePath($file));
     }
 
-    protected function getFilePath($file)
+    protected function getFilePath(string $file): string
     {
-        return storage_path("app/csv-import/{$file}");
+        return "csv-import/{$file}";
+    }
+
+    protected function getConfigFilePath(string $file): string
+    {
+        return $this->getFilePath("{$file}.config.json");
+    }
+
+    protected function getResultsFilePath(string $file): string
+    {
+        return $this->getFilePath("{$file}.results.json");
+    }
+
+    protected function getDataFromJsonFile(string $file): array
+    {
+        if ($this->filesystem->exists($file)) {
+            return @json_decode($this->filesystem->get($file), true) ?? [];
+        }
+
+        return [];
+    }
+
+    protected function getDisk(): ?string
+    {
+        return config('nova-csv-import.disk');
     }
 }
