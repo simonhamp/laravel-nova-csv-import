@@ -30,9 +30,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, index) in rows">
-                                <td class="text-right border-r">{{ index + 1 }}</td>
-                                <td v-for="column in columns">
+                            <tr v-for="(row, index) in rows" class="group">
+                                <td class="text-right border-r group-hover:bg-gray-50">{{ index + 1 }}</td>
+                                <td v-for="column in columns" class="group-hover:bg-gray-50">
                                     <code>
                                         {{ row[column] }}
                                         <i v-if="! row[column]">null</i>
