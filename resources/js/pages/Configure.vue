@@ -62,7 +62,10 @@
                     </thead>
                     <tbody>
                         <tr v-for="field in fields[resource]">
-                            <td class="pr-2"><span class="font-bold">{{ field.name }}</span></td>
+                            <td class="pr-2">
+                                <span class="font-bold">{{ field.name }}</span><br>
+                                <small class="text-grey-300">{{ field.attribute }}</small>
+                            </td>
                             <td class="text-center">
                                 <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
                                     <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
