@@ -14,32 +14,34 @@
                     data will look like once imported.
                 </p>
 
-                <table cellpadding="10">
-                    <thead class="border-b">
-                        <tr>
-                            <th class="border-r" rowspan="2" valign="bottom">#</th>
-                            <th v-for="(column, field) in columns">
-                                {{ column }}
-                                <i v-if="! column">unmapped</i>
-                                <div v-else>&downarrow;</div>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th v-for="(column, field) in columns">{{ field }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(row, index) in rows">
-                            <td class="text-right border-r">{{ index + 1 }}</td>
-                            <td v-for="column in columns">
-                                <code>
-                                    {{ row[column] }}
-                                    <i v-if="! row[column]">null</i>
-                                </code>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="overflow-scroll">
+                    <table cellpadding="10">
+                        <thead class="border-b">
+                            <tr>
+                                <th class="border-r" rowspan="2" valign="bottom">#</th>
+                                <th v-for="(column, field) in columns" valign="top">
+                                    {{ column }}
+                                    <i v-if="! column">unmapped</i>
+                                    <div v-else>&downarrow;</div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th v-for="(column, field) in columns">{{ field }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(row, index) in rows">
+                                <td class="text-right border-r">{{ index + 1 }}</td>
+                                <td v-for="column in columns">
+                                    <code>
+                                        {{ row[column] }}
+                                        <i v-if="! row[column]">null</i>
+                                    </code>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <div class="flex justify-center space-x-2">
                     <LinkButton @click="reconfigure"><HeroiconsOutlineRewind /> Reconfigure</LinkButton>
