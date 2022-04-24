@@ -119,7 +119,7 @@ class ImportController
 
         $resource = Nova::resourceInstanceForKey($resource_name);
         $attributes = $resource->creationFields($request)->pluck('attribute');
-        $rules = $this->extractValidationRules($request, $resource)->toArray();
+        $rules = $this->extractValidationRules($resource, $request)->toArray();
         $model_class = get_class($resource->resource);
 
         $import = $this->importer
@@ -180,10 +180,11 @@ class ImportController
             });
         }
 
-        $fields = $fieldsCollection->map(function (Field $field) {
+        $fields = $fieldsCollection->map(function (Field $field) use ($novaResource, $request) {
             return [
                 'name' => $field->name,
-                'attribute' => $field->attribute
+                'attribute' => $field->attribute,
+                'rules' => $this->extractValidationRules($novaResource, $request)->get($field->attribute),
             ];
         });
         

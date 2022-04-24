@@ -65,7 +65,8 @@
                             <td class="pr-2"><span class="font-bold">{{ field.name }}</span></td>
                             <td class="text-center">
                                 <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
-                                    <option value="">- Ignore this column -</option>
+                                    <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
+                                    <option value="" v-else>- Ignore this column -</option>
                                     <option v-for="heading in headings" :value="heading">{{ heading }}</option>
                                 </SelectControl>
                             </td>
