@@ -74,7 +74,7 @@ class ToolServiceProvider extends ServiceProvider
         $this->app->when([UploadController::class, ImportController::class])
             ->needs(ModelImporter::class)
             ->give(function () {
-                $class = $this->app['config']->get('csv-importer.importer');
+                $class = $this->app['config']->get('csv-import.importer');
 
                 $importable = \Maatwebsite\Excel\Concerns\Importable::class;
 
