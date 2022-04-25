@@ -91,8 +91,6 @@
 
                                 <optgroup label="Custom">
                                     <option value="custom">Single value</option>
-                                    <option value="custom.true">TRUE</option>
-                                    <option value="custom.false">FALSE</option>
                                 </optgroup>
                             </SelectControl>
 
