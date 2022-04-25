@@ -41,7 +41,7 @@ class UploadController
 
         $new_filename = implode('.', [
             File::hash($file->getRealPath()),
-            $file->getClientOriginalExtension()
+            $file->extension(),
         ]);
 
         $this->filesystem->putFileAs('csv-import', $file, $new_filename);
