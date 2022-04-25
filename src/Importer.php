@@ -54,7 +54,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         return $data;
     }
 
-    public function model(array $row)
+    public function model(array $row): Model
     {
         $model = $this->resource::newModel();
 
@@ -78,19 +78,12 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         return 100;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAttributeMap()
+    public function getAttributeMap(): array
     {
         return $this->attribute_map;
     }
 
-    /**
-     * @param mixed $map
-     * @return Importer
-     */
-    public function setAttributeMap($map)
+    public function setAttributeMap(array $map): self
     {
         $this->attribute_map = $map;
 
@@ -136,26 +129,19 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getModelClass()
+    public function getModelClass(): string
     {
         return $this->model_class;
     }
 
-    /**
-     * @param mixed $model_class
-     * @return Importer
-     */
-    public function setModelClass($model_class)
+    public function setModelClass(string $model_class): self
     {
         $this->model_class = $model_class;
 
         return $this;
     }
 
-    public function setResource($resource)
+    public function setResource(Resource $resource): self
     {
         $this->resource = $resource;
 
