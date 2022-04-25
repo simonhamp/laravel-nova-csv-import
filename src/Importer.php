@@ -2,32 +2,42 @@
 
 namespace SimonHamp\LaravelNovaCsvImport;
 
+use Illuminate\Support\Str;
 use Laravel\Nova\Resource;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
-use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, WithBatchInserts, WithChunkReading, SkipsOnFailure, SkipsOnError
+class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, WithBatchInserts, WithChunkReading,
+                            SkipsOnFailure, SkipsOnError, SkipsEmptyRows
 {
     use Importable, SkipsFailures, SkipsErrors;
 
     /** @var Resource */
     protected $resource;
-    protected $attribute_map;
+
+    protected $attribute_map = [];
+
     protected $rules;
+
     protected $model_class;
+
+    protected $meta_values = [];
+
+    protected $custom_values = [];
 
     public function map($row): array
     {
-        if (! $this->attribute_map) {
+        if (empty($this->attribute_map)) {
             return $row;
         }
 
@@ -38,7 +48,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
                 continue;
             }
 
-            $data[$attribute] = $this->preProcessValue($row[$column]);
+            $data[$attribute] = $this->getFieldValue($row, $column, $attribute);
         }
 
         return $data;
@@ -87,11 +97,39 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         return $this;
     }
 
-    /**
-     * @param mixed $rules
-     * @return Importer
-     */
-    public function setRules($rules)
+    public function getMeta($key = null)
+    {
+        if ($key && ! empty($this->meta_values[$key])) {
+            return $this->meta_values[$key];
+        }
+
+        return $this->meta_values;
+    }
+
+    public function setMeta(array $meta): self
+    {
+        $this->meta_values = $meta;
+
+        return $this;
+    }
+
+    public function getCustomValues($key = null)
+    {
+        if ($key && ! empty($this->custom_values[$key])) {
+            return $this->custom_values[$key];
+        }
+
+        return $this->custom_values;
+    }
+
+    public function setCustomValues(array $map): self
+    {
+        $this->custom_values = $map;
+
+        return $this;
+    }
+
+    public function setRules(array $rules): self
     {
         $this->rules = $rules;
 
@@ -124,17 +162,14 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         return $this;
     }
 
-    private function preProcessValue($value)
+    protected function getFieldValue(array $row, string $mapping, string $attribute)
     {
-        switch ($value) {
-            case 'FALSE':
-                return false;
-                break;
-            case 'TRUE':
-                return true;
-                break;
+        if (array_key_exists($mapping, $row)) {
+            return $row[$mapping];
+        } elseif (Str::startsWith($mapping, 'meta')) {
+            return $this->getMeta(Str::remove('@meta.', "@{$mapping}"));
+        } elseif (Str::startsWith($mapping, 'custom')) {
+            return $this->getCustomValues($attribute);
         }
-
-        return $value;
     }
 }
