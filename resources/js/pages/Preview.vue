@@ -36,10 +36,10 @@
                         <tbody>
                             <tr v-for="(row, index) in rows" class="group">
                                 <td class="text-right border-r group-hover:bg-gray-50">{{ index + 1 }}</td>
-                                <td v-for="column in columns" class="group-hover:bg-gray-50">
+                                <td v-for="(column, field) in columns" class="group-hover:bg-gray-50">
                                     <code>
-                                        {{ row[column] }}
-                                        <i v-if="! row[column]">null</i>
+                                        {{ row[field] }}
+                                        <i v-if="! row[field]">null</i>
                                     </code>
                                 </td>
                             </tr>
