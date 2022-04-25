@@ -122,6 +122,7 @@ export default {
         return {
             resource: this.config?.resource || '',
             mappings: this.config?.mappings || {},
+            values: this.config?.values || {},
             saving: false,
         };
     },
@@ -140,15 +141,24 @@ export default {
     watch: {
         resource: {
             handler(newValue) {
-                const fields = this.fields[newValue];
-
-                // Reset all of the mappings
-                for (let {name, attribute} of fields) {
-                    this.mappings[attribute] = "";
-                }
-
                 if (newValue === "") {
                     return;
+                }
+
+                const fields = this.fields[newValue];
+
+                // Restore original settings
+                if (newValue === this.config?.resource) {
+                    this.mappings = this.config?.mappings || {};
+                    this.values = this.config?.values || {};
+
+                    return;
+                }
+
+                // Reset all of the mappings and any custom values
+                for (let {name, attribute} of fields) {
+                    this.mappings[attribute] = "";
+                    this.values = "";
                 }
 
                 // For each field of the resource, try to find a matching heading and pre-assign
@@ -178,6 +188,7 @@ export default {
             let data = {
                 resource: this.resource,
                 mappings: this.mappings,
+                values: this.values,
                 file: this.file,
             };
 
@@ -218,6 +229,7 @@ export default {
             return '/nova-vendor/laravel-nova-csv-import/' + path;
         }
     },
+
     computed: {
         disabledSave() {
             return ! this.hasValidConfiguration() || this.saving;
