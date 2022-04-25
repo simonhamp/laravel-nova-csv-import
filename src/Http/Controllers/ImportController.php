@@ -66,13 +66,19 @@ class ImportController
      */
     public function storeConfig(NovaRequest $request)
     {
-        // TODO: Add some validation
-        $config = json_encode([
-            'resource' => $request->input('resource'),
-            'mappings' => $request->input('mappings'),
-        ]);;
-
         $file = $request->input('file');
+        
+        // TODO: Add some validation
+        $config = json_encode(
+            array_merge(
+                $this->getConfigForFile($file),
+                [
+                    'resource' => $request->input('resource'),
+                    'mappings' => $request->input('mappings'),
+                    'values' => $request->input('values'),
+                ],
+            )
+        );
 
         $path = $this->getConfigFilePath($file);
 
@@ -95,6 +101,7 @@ class ImportController
 
         $columns = $config['mappings'];
         $resource = $config['resource'];
+        $values = $config['values'];
 
         $mapped_columns = array_values(array_filter($columns));
 
