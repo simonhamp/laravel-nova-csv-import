@@ -7,6 +7,8 @@
         <heading class="mb-6">CSV Import</heading>
 
         <card class="flex flex-col items-center justify-center" style="min-height: 300px">
+            <!-- TODO: Put some history here -->
+            <!-- TODO: Replace with Nova's own file field for sexier results -->
             <input type="file" name="file" ref="file" @change="handleFile" class="mb-3">
             <DefaultButton v-bind:disabled="!file" @click="upload">Upload &amp; Configure &rightarrow;</DefaultButton>
         </card>

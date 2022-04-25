@@ -50,7 +50,9 @@ class ImportController
         });
 
         $resources = $resources->mapWithKeys(function ($resource) {
-            return [$resource::uriKey() => $resource::label()];
+            return [
+                $resource::uriKey() => $resource::label()
+            ];
         });
 
         return inertia(
