@@ -39,15 +39,26 @@ class UploadController
             return response()->json(['message' => 'Sorry, we could not import that file'], 422);
         }
 
-        $newFile = implode('.', [
+        $new_filename = implode('.', [
             File::hash($file->getRealPath()),
             $file->getClientOriginalExtension()
         ]);
 
-        $this->filesystem->putFileAs('csv-import', $file, $newFile);
+        $this->filesystem->putFileAs('csv-import', $file, $new_filename);
+
+        // Capture some basic info
+        // ! Note that original name and extension are user-editable, so could be tampered with
+        // https://laravel.com/docs/9.x/filesystem#other-uploaded-file-information
+        $this->filesystem->put(
+            "csv-import/{$new_filename}.config.json",
+            json_encode([
+                'original_filename' => $file->getClientOriginalName(),
+                'uploaded_at' => time(),
+            ])
+        );
 
         return response()->json([
-            'configure' => "/csv-import/configure/{$newFile}"
+            'configure' => "/csv-import/configure/{$new_filename}"
         ]);
     }
 }
