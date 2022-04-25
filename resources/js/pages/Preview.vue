@@ -18,11 +18,15 @@
                     <table cellpadding="10">
                         <thead class="border-b">
                             <tr>
-                                <th class="border-r" rowspan="2" valign="bottom">#</th>
-                                <th v-for="(column, field) in columns" valign="top">
+                                <th class="border-r" rowspan="3" valign="bottom">#</th>
+                                <th v-for="(column, field) in columns">
                                     {{ column }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th v-for="(column, field) in columns">
                                     <i v-if="! column">unmapped</i>
-                                    <div v-else>&downarrow;</div>
+                                    <span v-else>&downarrow;</span>
                                 </th>
                             </tr>
                             <tr>
