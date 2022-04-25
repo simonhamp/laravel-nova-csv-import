@@ -141,7 +141,6 @@ class ImportController
         $custom_values = $config['values'] ?? [];
 
         $resource = Nova::resourceInstanceForKey($resource_name);
-        $attributes = $resource->creationFields($request)->pluck('attribute');
         $rules = $this->extractValidationRules($resource, $request)->toArray();
         $model_class = get_class($resource->resource);
 
