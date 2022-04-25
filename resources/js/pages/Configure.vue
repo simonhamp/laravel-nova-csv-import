@@ -6,85 +6,110 @@
 
         <heading class="mb-6">CSV Import - Configure</heading>
 
-        <card class="flex flex-col" style="min-height: 300px">
-            <div class="p-8 space-y-4">
-                <p>
-                    We were able to discover <b>{{ headings.length }}</b> column(s) and <b>{{ total_rows }}</b>
-                    row(s) in your data.
-                </p>
+        <card class="p-8 space-y-4 mb-8">
+            <p>
+                We were able to discover <b>{{ headings.length }}</b> column(s) and <b>{{ total_rows }}</b>
+                row(s) in your data.
+            </p>
 
-                <p>
-                    Here's a sample of the data:
-                </p>
+            <p>
+                Here's a sample of the data:
+            </p>
 
-                <hr>
+            <hr>
 
-                <div class="overflow-scroll">
-                    <table cellpadding="10">
-                        <thead class="border-b">
-                            <tr>
-                                <th v-for="heading in headings"><span class="font-bold">{{ heading }}</span></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="row in rows">
-                                <td v-for="col in row">
-                                    <code>
-                                        {{ col }}
-                                        <i v-if="! col">null</i>
-                                    </code>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <hr>
-
-                <p>
-                    Choose a resource to import them into and match up the headings from the CSV to the
-                    appropriate fields of the resource.
-                </p>
-
-                <div>
-                    <SelectControl @change="(value) => resource = value" :selected="resource" class="md:w-1/2">
-                        <option value="">- Select a resource -</option>
-                        <option v-for="(label, index) in resources" :value="index">{{ label }}</option>
-                    </SelectControl>
-                </div>
-
-                <table cellpadding="10" v-if="resource">
+            <div class="overflow-scroll">
+                <table cellpadding="10">
                     <thead class="border-b">
                         <tr>
-                            <th>Fields</th>
-                            <th>Columns</th>
+                            <th v-for="heading in headings"><span class="font-bold">{{ heading }}</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="field in fields[resource]">
-                            <td class="pr-2">
-                                <span class="font-bold">{{ field.name }}</span><br>
-                                <small class="text-grey-300">{{ field.attribute }}</small>
-                            </td>
-                            <td class="text-center">
-                                <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
-                                    <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
-                                    <option value="" v-else>- Ignore this column -</option>
-                                    <option v-for="heading in headings" :value="heading">{{ heading }}</option>
-                                </SelectControl>
+                        <tr v-for="row in rows">
+                            <td v-for="col in row">
+                                <code>
+                                    {{ col }}
+                                    <i v-if="! col">null</i>
+                                </code>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </card>
 
-                <div class="flex justify-center space-x-2">
-                    <LinkButton @click="goBack">
-                        &leftarrow; Upload a different file
-                    </LinkButton>
-                    <DefaultButton :disabled="disabledSave" @click="saveConfig">
-                        {{ saving ? 'Importing...' : 'Save &amp; Preview &rightarrow;' }}
-                    </DefaultButton>
-                </div>
+        <card class="p-8 space-y-4 mb-8">
+            <p>
+                Choose a resource to import this data into.
+            </p>
+
+            <div class="inline-flex items-center">
+                <b>Resource:</b>
+                <SelectControl @change="(value) => resource = value" :selected="resource" class="ml-4">
+                    <option value="">- Select a resource -</option>
+                    <option v-for="(label, index) in resources" :value="index">{{ label }}</option>
+                </SelectControl>
+            </div>
+        </card>
+
+        <card class="p-8 space-y-4">
+            <p v-if="resource">
+                Choose which data to fill the appropriate fields of the chosen resource. The columns from your uploaded
+                file have been auto-matched to the resource fields with the same name.
+            </p>
+
+            <table cellpadding="10" v-if="resource">
+                <thead class="border-b">
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                        <!-- <th>Modifier</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="field in fields[resource]">
+                        <td class="pr-2">
+                            <span class="font-bold">{{ field.name }}</span><br>
+                            <small class="text-grey-300">{{ field.attribute }}</small>
+                        </td>
+                        <td class="md:flex">
+                            <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
+                                <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
+                                <option value="" v-else>- Leave field empty -</option>
+
+                                <optgroup label="File columns">
+                                    <option v-for="heading in headings" :value="heading">{{ heading }}</option>
+                                </optgroup>
+
+                                <optgroup label="Meta data">
+                                    <option value="meta.file">File name (with suffix): {{ file }}</option>
+                                    <option value="meta.file_name">File name (without suffix): {{ file_name }}</option>
+                                    <option value="meta.original_file">Original file name (with suffix): {{ config.original_filename }}</option>
+                                    <option value="meta.original_file_name">Original file name (without suffix): {{ original_file_name }}</option>
+                                </optgroup>
+
+                                <optgroup label="Custom">
+                                    <option value="custom">Single value</option>
+                                    <option value="custom.true">TRUE</option>
+                                    <option value="custom.false">FALSE</option>
+                                </optgroup>
+                            </SelectControl>
+
+                            <input v-model="values[field.attribute]" v-if="mappings[field.attribute] === 'custom'"
+                                class="form-control form-input form-input-bordered ml-4">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="flex justify-center space-x-2">
+                <LinkButton @click="goBack">
+                    &leftarrow; Upload a different file
+                </LinkButton>
+                <DefaultButton :disabled="disabledSave" @click="saveConfig">
+                    {{ saving ? 'Importing...' : 'Save &amp; Preview &rightarrow;' }}
+                </DefaultButton>
             </div>
         </card>
     </div>
@@ -106,6 +131,7 @@ export default {
         'resources',
         'fields',
         'file',
+        'file_name',
         'rows',
         'total_rows',
         'config',
@@ -196,6 +222,14 @@ export default {
         disabledSave() {
             return ! this.hasValidConfiguration() || this.saving;
         },
+
+        original_file_name() {
+            if (this.config.original_filename?.includes('.')) {
+                return this.config.original_filename.split('.').slice(0, -1).join('.');
+            }
+
+            return this.config.original_filename || '';
+        }
     }
 }
 </script>
