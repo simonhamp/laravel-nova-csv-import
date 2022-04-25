@@ -29,6 +29,8 @@ class ImportController
 
     public function configure(NovaRequest $request, string $file): Response
     {
+        $file_name = pathinfo($file, PATHINFO_FILENAME);
+
         $import = $this->importer
             ->toCollection($this->getFilePath($file), $this->getDisk())
             ->first();
@@ -53,7 +55,7 @@ class ImportController
 
         return inertia(
             'CsvImport/Configure',
-            compact('file', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config')
+            compact('file', 'file_name', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config')
         );
     }
 
