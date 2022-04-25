@@ -69,7 +69,7 @@ class ImportController
     public function storeConfig(NovaRequest $request)
     {
         $file = $request->input('file');
-        
+
         // TODO: Add some validation
         $config = json_encode(
             array_merge(
@@ -93,17 +93,28 @@ class ImportController
 
     public function preview(NovaRequest $request, string $file): Response
     {
-        $import = $this->importer
-            ->toCollection($this->getFilePath($file), $this->getDisk())
-            ->first();
-
-        $total_rows = $import->count();
-
         $config = $this->getConfigForFile($file);
 
         $columns = $config['mappings'];
         $resource = $config['resource'];
-        $values = $config['values'];
+        $values = $config['values'] ?? [];
+        $original_filename = $config['original_filename'] ?? '';
+
+        $meta = [
+            'file' => $file,
+            'file_name' => pathinfo($file, PATHINFO_FILENAME),
+            'original_file' => $original_filename,
+            'original_file_name' => pathinfo($original_filename, PATHINFO_FILENAME),
+        ];
+
+        $import = $this->importer
+            ->setAttributeMap($columns)
+            ->setCustomValues($values)
+            ->setMeta($meta)
+            ->toCollection($this->getFilePath($file), $this->getDisk())
+            ->first();
+
+        $total_rows = $import->count();
 
         $mapped_columns = array_values(array_filter($columns));
 
@@ -127,6 +138,7 @@ class ImportController
 
         $resource_name = $config['resource'];
         $attribute_map = $config['mappings'];
+        $custom_values = $config['values'] ?? [];
 
         $resource = Nova::resourceInstanceForKey($resource_name);
         $attributes = $resource->creationFields($request)->pluck('attribute');
@@ -144,6 +156,8 @@ class ImportController
             ->setAttributeMap($attribute_map)
             ->setRules($rules)
             ->setModelClass($model_class)
+            ->setMeta($meta)
+            ->setCustomValues($custom_values)
             ->import($path, $this->getDisk());
 
         $failures = $this->importer->failures();
