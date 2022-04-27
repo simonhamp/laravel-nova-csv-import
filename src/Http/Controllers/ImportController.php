@@ -55,9 +55,11 @@ class ImportController
             ];
         });
 
+        $mods = $this->importer->getAvailableModifiers();
+
         return inertia(
             'CsvImport/Configure',
-            compact('file', 'file_name', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config')
+            compact('file', 'file_name', 'resources', 'fields', 'rows', 'total_rows', 'headings', 'config', 'mods')
         );
     }
 
@@ -78,6 +80,13 @@ class ImportController
                     'resource' => $request->input('resource'),
                     'mappings' => $request->input('mappings'),
                     'values' => $request->input('values'),
+                    'modifiers' => collect($request->input('modifiers'))
+                        ->map(function ($modifiers) {
+                            return collect($modifiers)
+                                ->reject(function ($modifier) {
+                                    return empty($modifier['name']);
+                                });
+                        })
                 ],
             ),
             JSON_PRETTY_PRINT
@@ -99,6 +108,7 @@ class ImportController
         $columns = $config['mappings'];
         $resource = $config['resource'];
         $values = $config['values'] ?? [];
+        $modifiers = $config['modifiers'] ?? [];
         $original_filename = $config['original_filename'] ?? '';
 
         $meta = [
@@ -112,6 +122,7 @@ class ImportController
             ->setAttributeMap($columns)
             ->setCustomValues($values)
             ->setMeta($meta)
+            ->setModifiers($modifiers)
             ->toCollection($this->getFilePath($file), $this->getDisk())
             ->first();
 
@@ -140,10 +151,11 @@ class ImportController
         $resource_name = $config['resource'];
         $attribute_map = $config['mappings'];
         $custom_values = $config['values'] ?? [];
+        $modifiers = $config['modifiers'] ?? [];
 
         $resource = Nova::resourceInstanceForKey($resource_name);
         $rules = $this->extractValidationRules($resource, $request)->toArray();
-        $model_class = get_class($resource->resource);
+        $model_class = $resource->resource::class;
 
         $import = $this->importer
             ->toCollection($path, $this->getDisk())
@@ -158,6 +170,7 @@ class ImportController
             ->setModelClass($model_class)
             ->setMeta($meta)
             ->setCustomValues($custom_values)
+            ->setModifiers($modifiers)
             ->import($path, $this->getDisk());
 
         $failures = $this->importer->failures();

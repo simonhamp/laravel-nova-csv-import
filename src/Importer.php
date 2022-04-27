@@ -16,11 +16,12 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use SimonHamp\LaravelNovaCsvImport\Concerns\HasModifiers;
 
 class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, WithBatchInserts, WithChunkReading,
                             SkipsOnFailure, SkipsOnError, SkipsEmptyRows
 {
-    use Importable, SkipsFailures, SkipsErrors;
+    use Importable, SkipsFailures, SkipsErrors, HasModifiers;
 
     /** @var Resource */
     protected $resource;
@@ -35,6 +36,11 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
 
     protected $custom_values = [];
 
+    public function __construct()
+    {
+        $this->bootHasModifiers();
+    }
+
     public function map($row): array
     {
         if (empty($this->attribute_map)) {
@@ -48,7 +54,10 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
                 continue;
             }
 
-            $data[$attribute] = $this->getFieldValue($row, $column, $attribute);
+            $data[$attribute] = $this->modifyValue(
+                $this->getFieldValue($row, $column, $attribute),
+                $this->getModifiers($attribute)
+            );
         }
 
         return $data;

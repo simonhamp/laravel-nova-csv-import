@@ -15,5 +15,7 @@
     "postcss": "^8.3.11",
     "vue-loader": "^16.8.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "vuedraggable": "^4.1.0"
+  }
 }
