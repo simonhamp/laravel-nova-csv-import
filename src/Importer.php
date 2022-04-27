@@ -108,8 +108,8 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
 
     public function getCustomValues($key = null)
     {
-        if ($key && ! empty($this->custom_values[$key])) {
-            return $this->custom_values[$key];
+        if ($key) {
+            return $this->custom_values[$key] ?? '';
         }
 
         return $this->custom_values;
@@ -154,7 +154,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             return $row[$mapping];
         } elseif (Str::startsWith($mapping, 'meta')) {
             return $this->getMeta(Str::remove('@meta.', "@{$mapping}"));
-        } elseif (Str::startsWith($mapping, 'custom')) {
+        } elseif ($mapping === 'custom') {
             return $this->getCustomValues($attribute);
         }
     }
