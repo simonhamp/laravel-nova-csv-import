@@ -2,6 +2,7 @@
 
 namespace SimonHamp\LaravelNovaCsvImport;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Laravel\Nova\Resource;
 use Maatwebsite\Excel\Concerns\Importable;
