@@ -7,8 +7,10 @@ use Illuminate\Support\Str;
 use SimonHamp\LaravelNovaCsvImport\Contracts\Modifier;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Boolean;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\ExcelDate;
-use SimonHamp\LaravelNovaCsvImport\Modifiers\Str as StrModifier;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Hash;
+use SimonHamp\LaravelNovaCsvImport\Modifiers\Prefix;
+use SimonHamp\LaravelNovaCsvImport\Modifiers\Str as StrModifier;
+use SimonHamp\LaravelNovaCsvImport\Modifiers\Suffix;
 
 trait HasModifiers
 {
@@ -24,6 +26,8 @@ trait HasModifiers
             new ExcelDate,
             new StrModifier,
             new Hash,
+            new Prefix,
+            new Suffix,
         );
     }
 
@@ -81,6 +85,7 @@ trait HasModifiers
     protected function formatModifierSettings(array $settings = [])
     {
         $normalised_settings = [];
+
         foreach ($settings as $name => $setting) {
             $normalised = [
                 'title' => $setting['title'] ?? Str::title($name),
