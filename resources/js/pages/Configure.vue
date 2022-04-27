@@ -78,7 +78,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="field in fields[resource]">
+                        <tr v-for="field in fields[resource]" class="border-b">
                             <td class="pr-2">
                                 <span class="font-bold">{{ field.name }}</span><br>
                                 <small class="text-grey-300">{{ field.attribute }}</small>
@@ -99,7 +99,7 @@
                                         <option value="meta.original_file_name">Original file name (without suffix): {{ original_file_name }}</option>
                                     </optgroup>
 
-                                    <optgroup label="Custom">
+                                    <optgroup label="Custom - same for all">
                                         <option value="custom">Single value</option>
                                     </optgroup>
                                 </SelectControl>
