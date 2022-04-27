@@ -73,9 +73,9 @@
             </template>
 
             <template v-if="errors.length !== 0">
-                <BasicButton @click="showErrors = !showErrors">
+                <!-- <BasicButton @click="showErrors = !showErrors">
                     {{ showErrors ? 'Hide errors' : 'Show errors' }}
-                </BasicButton>
+                </BasicButton> -->
                 <div v-if="showErrors">
                     <table cellpadding="10">
                         <thead class="border-b">
