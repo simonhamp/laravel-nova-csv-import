@@ -79,7 +79,8 @@ class ImportController
                     'mappings' => $request->input('mappings'),
                     'values' => $request->input('values'),
                 ],
-            )
+            ),
+            JSON_PRETTY_PRINT
         );
 
         $path = $this->getConfigFilePath($file);
@@ -171,7 +172,7 @@ class ImportController
             'imported' => $total_rows - $failures->count() - $errors->count(),
             'failures' => $failures,
             'errors' => $errors,
-        ]));
+        ], JSON_PRETTY_PRINT));
 
         return response()->json(['review' => "/csv-import/review/{$file}"]);
     }
