@@ -105,24 +105,13 @@ class ImportController
     {
         $config = $this->getConfigForFile($file);
 
-        $columns = $config['mappings'];
         $resource = $config['resource'];
-        $values = $config['values'] ?? [];
-        $modifiers = $config['modifiers'] ?? [];
-        $original_filename = $config['original_filename'] ?? '';
-
-        $meta = [
-            'file' => $file,
-            'file_name' => pathinfo($file, PATHINFO_FILENAME),
-            'original_file' => $original_filename,
-            'original_file_name' => pathinfo($original_filename, PATHINFO_FILENAME),
-        ];
 
         $import = $this->importer
-            ->setAttributeMap($columns)
-            ->setCustomValues($values)
-            ->setMeta($meta)
-            ->setModifiers($modifiers)
+            ->setAttributeMap($columns = $config['mappings'])
+            ->setCustomValues($config['values'])
+            ->setMeta($config['meta'])
+            ->setModifiers($config['modifiers'])
             ->toCollection($this->getFilePath($file), $this->getDisk())
             ->first();
 
@@ -149,9 +138,6 @@ class ImportController
         }
 
         $resource_name = $config['resource'];
-        $attribute_map = $config['mappings'];
-        $custom_values = $config['values'] ?? [];
-        $modifiers = $config['modifiers'] ?? [];
 
         $resource = Nova::resourceInstanceForKey($resource_name);
         $rules = $this->extractValidationRules($resource, $request)->toArray();
@@ -165,12 +151,12 @@ class ImportController
 
         $this->importer
             ->setResource($resource)
-            ->setAttributeMap($attribute_map)
+            ->setAttributeMap($config['mappings'])
             ->setRules($rules)
             ->setModelClass($model_class)
-            ->setMeta($meta)
-            ->setCustomValues($custom_values)
-            ->setModifiers($modifiers)
+            ->setMeta($config['meta'])
+            ->setCustomValues($config['values'])
+            ->setModifiers($config['modifiers'])
             ->import($path, $this->getDisk());
 
         $failures = $this->importer->failures();
@@ -287,7 +273,21 @@ class ImportController
 
     protected function getConfigForFile(string $file): array
     {
-        return $this->getDataFromJsonFile($this->getConfigFilePath($file));
+        $config = $this->getDataFromJsonFile($this->getConfigFilePath($file));
+
+        $config['values'] = $config['values'] ?? [];
+        $config['modifiers'] = $config['modifiers'] ?? [];
+
+        $original_filename = $config['original_filename'] ?? '';
+
+        $config['meta'] = [
+            'file' => $file,
+            'file_name' => pathinfo($file, PATHINFO_FILENAME),
+            'original_file' => $original_filename,
+            'original_file_name' => pathinfo($original_filename, PATHINFO_FILENAME),
+        ];
+
+        return $config;
     }
 
     protected function getLastResultsForFile(string $file): array
