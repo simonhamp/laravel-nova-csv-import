@@ -46,7 +46,6 @@ class Str implements Modifier
     {
         $function = $settings['function'];
 
-        //return LaravelStr::$function($value);
-        return '';
+        return LaravelStr::$function($value);
     }
 }
