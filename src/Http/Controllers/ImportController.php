@@ -276,7 +276,7 @@ class ImportController
         $config = $this->getDataFromJsonFile($this->getConfigFilePath($file));
 
         $config['values'] = $config['values'] ?? [];
-        $config['modifiers'] = $config['modifiers'] ?? [];
+        $config['modifiers'] = $config['modifiers'] ?? new \stdClass;
 
         $original_filename = $config['original_filename'] ?? '';
 
