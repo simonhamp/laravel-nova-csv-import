@@ -91,7 +91,7 @@ config file.
   
 First, publish the config file:
 ```
-php artisan vendor:publish --tag=nova-csv-import
+php artisan vendor:publish --tag=csv-import
 ``` 
 
 Then, define and register your own importer class:
