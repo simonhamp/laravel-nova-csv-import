@@ -13,6 +13,7 @@ use Laravel\Nova\Rules\Relatable;
 use Laravel\Nova\Actions\ActionResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ImportController
 {
@@ -176,7 +177,7 @@ class ImportController
         return response()->json(['review' => "/csv-import/review/{$file}"]);
     }
 
-    public function review(NovaRequest $request, string $file): Response
+    public function review(NovaRequest $request, string $file): Response|RedirectResponse
     {
         if (! $results = $this->getLastResultsForFile($file)) {
             return redirect()->route('csv-import.preview', ['file' => $file]);
@@ -205,6 +206,10 @@ class ImportController
                 return !in_array($field->attribute, $novaResource::excludeAttributesFromImport($request));
             });
         }
+
+        $fieldsCollection = $fieldsCollection->reject(
+            fn(Field $field) => in_array($field->attribute, config()->get("csv-import.exclude_attributes_global", []))
+        );
 
         $fields = $fieldsCollection->map(function (Field $field) use ($novaResource, $request) {
             return [

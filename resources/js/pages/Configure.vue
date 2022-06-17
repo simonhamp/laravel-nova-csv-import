@@ -63,7 +63,7 @@
                 <p v-if="resource">
                     Use modifiers to modify the value <i>before</i> it gets saved to your resource. Modifiers are combinatory
                     meaning you can stack them together to do weird and wonderful things with your data
-                    (remember what Uncle Ben said, though!) They are executed in the order defined.
+                    (remember what Uncle Ben said) They are executed in the order defined.
                 </p>
 
                 <p>
