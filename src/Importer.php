@@ -29,7 +29,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
 
     protected $attribute_map = [];
 
-    protected $rules;
+    protected $rules = [];
 
     protected $model_class;
 
