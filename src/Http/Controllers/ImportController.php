@@ -43,7 +43,7 @@ class ImportController
 
         $rows = $import->take(10)->all();
 
-        $resources = $this->getAvailableResourcesForImport($request); 
+        $resources = $this->getAvailableResourcesForImport($request);
 
         $fields = $resources->mapWithKeys(function ($resource) use ($request) {
             return $this->getAvailableFieldsForImport($resource, $request);
@@ -64,7 +64,7 @@ class ImportController
     }
 
     /**
-     * 
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -197,28 +197,32 @@ class ImportController
 
     protected function getAvailableFieldsForImport(string $resource, NovaRequest $request): array
     {
-        $novaResource = new $resource(new $resource::$model);
-        $fieldsCollection = collect($novaResource->creationFields($request));
-
-        if (method_exists($novaResource, 'excludeAttributesFromImport')) {
-            $fieldsCollection = $fieldsCollection->filter(function(Field $field) use ($novaResource, $request) {
-                return !in_array($field->attribute, $novaResource::excludeAttributesFromImport($request));
+        try {
+            $novaResource = new $resource(new $resource::$model);
+            $fieldsCollection = collect($novaResource->creationFields($request));
+    
+            if (method_exists($novaResource, 'excludeAttributesFromImport')) {
+                $fieldsCollection = $fieldsCollection->filter(function (Field $field) use ($novaResource, $request) {
+                    return !in_array($field->attribute, $novaResource::excludeAttributesFromImport($request));
+                });
+            }
+    
+            $fields = $fieldsCollection->map(function (Field $field) use ($novaResource, $request) {
+                return [
+                    'name' => $field->name,
+                    'attribute' => $field->attribute,
+                    'rules' => $this->extractValidationRules($novaResource, $request)->get($field->attribute),
+                ];
             });
-        }
-
-        $fields = $fieldsCollection->map(function (Field $field) use ($novaResource, $request) {
+            
+            // Note: ->values() is used here to avoid this array being turned into an object due to
+            // non-sequential keys (which might happen due to the filtering above.
             return [
-                'name' => $field->name,
-                'attribute' => $field->attribute,
-                'rules' => $this->extractValidationRules($novaResource, $request)->get($field->attribute),
+                $novaResource->uriKey() => $fields->values(),
             ];
-        });
-        
-        // Note: ->values() is used here to avoid this array being turned into an object due to 
-        // non-sequential keys (which might happen due to the filtering above.
-        return [
-            $novaResource->uriKey() => $fields->values(),
-        ];
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     protected function getAvailableResourcesForImport(NovaRequest $request): Collection
