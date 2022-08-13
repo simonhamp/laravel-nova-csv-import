@@ -13,6 +13,7 @@ use Laravel\Nova\Rules\Relatable;
 use Laravel\Nova\Actions\ActionResource;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
+use SimonHamp\LaravelNovaCsvImport\Http\Requests\ImportNovaRequest;
 
 class ImportController
 {
@@ -27,7 +28,7 @@ class ImportController
         $this->filesystem = $filesystem;
     }
 
-    public function configure(NovaRequest $request, string $file): Response
+    public function configure(ImportNovaRequest $request, string $file): Response
     {
         $file_name = pathinfo($file, PATHINFO_FILENAME);
 
@@ -127,7 +128,7 @@ class ImportController
         );
     }
 
-    public function import(NovaRequest $request)
+    public function import(ImportNovaRequest $request)
     {
         $file = $request->input('file');
 
@@ -140,6 +141,8 @@ class ImportController
         $resource_name = $config['resource'];
 
         $resource = Nova::resourceInstanceForKey($resource_name);
+
+        $request->setImportResource(get_class($resource));
         $rules = $this->extractValidationRules($resource, $request)->toArray();
         $model_class = $resource->resource::class;
 
@@ -195,7 +198,7 @@ class ImportController
         );
     }
 
-    protected function getAvailableFieldsForImport(string $resource, NovaRequest $request): array
+    protected function getAvailableFieldsForImport(string $resource, ImportNovaRequest $request): array
     {
         $novaResource = new $resource(new $resource::$model);
         $fieldsCollection = collect($novaResource->creationFields($request));
@@ -207,6 +210,8 @@ class ImportController
         }
 
         $fields = $fieldsCollection->map(function (Field $field) use ($novaResource, $request) {
+            $request->setImportResource($novaResource);
+
             return [
                 'name' => $field->name,
                 'attribute' => $field->attribute,
