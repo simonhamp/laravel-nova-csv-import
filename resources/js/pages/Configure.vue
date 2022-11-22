@@ -225,7 +225,7 @@ export default {
                 // Reset all of the mappings and any custom values
                 for (let {name, attribute} of fields) {
                     this.mappings[attribute] = "";
-                    this.values = "";
+                    this.values = {};
                 }
 
                 // For each field of the resource, try to find a matching heading and pre-assign
