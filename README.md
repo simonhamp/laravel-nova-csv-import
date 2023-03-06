@@ -2,6 +2,8 @@
 
 [![Latest Stable Version](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/v/stable?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import) [![Total Downloads](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/downloads?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import) [![License](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/license?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
 
+[![RINGER](https://www.ringerhq.com/images/get-support-on-ringer.svg)](https://www.ringerhq.com/i/simonhamp/laravel-nova-csv-import)
+
 A simple CSV import tool for Laravel Nova that allows you to upload a CSV file via Nova and choose which Nova resource
 to import it to.
 
