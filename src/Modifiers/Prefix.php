@@ -14,7 +14,7 @@ class Prefix implements Modifier
 
     public function description(): string
     {
-        return "Prefix each row with a given string";
+        return 'Prefix each row with a given string';
     }
 
     public function settings(): array

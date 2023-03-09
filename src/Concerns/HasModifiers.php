@@ -78,7 +78,6 @@ trait HasModifiers
             $value = $instance->handle($value, $modifier['settings'] ?? []);
         }
 
-
         return $value;
     }
 

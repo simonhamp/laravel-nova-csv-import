@@ -37,7 +37,7 @@ class Str implements Modifier
                     'title' => 'Title Case',
                     'ucfirst' => 'Upper case first',
                     'upper' => 'UPPERCASE',
-                ]
+                ],
             ],
         ];
     }

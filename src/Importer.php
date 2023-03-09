@@ -19,12 +19,11 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use SimonHamp\LaravelNovaCsvImport\Concerns\HasModifiers;
 
-class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, WithBatchInserts, WithChunkReading,
-                            SkipsOnFailure, SkipsOnError, SkipsEmptyRows
+class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, WithBatchInserts, WithChunkReading, SkipsOnFailure, SkipsOnError, SkipsEmptyRows
 {
     use Importable, SkipsFailures, SkipsErrors, HasModifiers;
 
-    /** @var Resource */
+    /** @var resource */
     protected $resource;
 
     protected $attribute_map = [];

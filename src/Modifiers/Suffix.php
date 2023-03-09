@@ -14,7 +14,7 @@ class Suffix implements Modifier
 
     public function description(): string
     {
-        return "Suffix each row with a given string";
+        return 'Suffix each row with a given string';
     }
 
     public function settings(): array
