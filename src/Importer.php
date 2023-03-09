@@ -23,8 +23,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
 {
     use Importable, SkipsFailures, SkipsErrors, HasModifiers;
 
-    /** @var resource */
-    protected $resource;
+    protected Resource $resource;
 
     protected $attribute_map = [];
 
