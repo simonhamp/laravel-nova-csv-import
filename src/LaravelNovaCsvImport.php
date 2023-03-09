@@ -2,10 +2,10 @@
 
 namespace SimonHamp\LaravelNovaCsvImport;
 
-use Laravel\Nova\Nova;
-use Laravel\Nova\Tool;
 use Illuminate\Http\Request;
 use Laravel\Nova\Menu\MenuSection;
+use Laravel\Nova\Nova;
+use Laravel\Nova\Tool;
 
 class LaravelNovaCsvImport extends Tool
 {

@@ -14,8 +14,8 @@ class ExcelDate implements Modifier
 
     public function description(): string
     {
-        return "Interprets the given value as an Excel date-time float and converts it to a DateTime object
-            and formatted according to the supplied `format` setting";
+        return 'Interprets the given value as an Excel date-time float and converts it to a DateTime object
+            and formatted according to the supplied `format` setting';
     }
 
     public function settings(): array
@@ -24,7 +24,7 @@ class ExcelDate implements Modifier
             'format' => [
                 'type' => 'string',
                 'default' => 'Y-m-d H:i:s',
-            ]
+            ],
         ];
     }
 

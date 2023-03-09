@@ -2,16 +2,15 @@
 
 namespace SimonHamp\LaravelNovaCsvImport\Http\Controllers;
 
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Collection;
 use Inertia\Response;
+use Laravel\Nova\Actions\ActionResource;
+use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
-use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Rules\Relatable;
-use Laravel\Nova\Actions\ActionResource;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
 
 class ImportController
@@ -43,7 +42,7 @@ class ImportController
 
         $rows = $import->take(10)->all();
 
-        $resources = $this->getAvailableResourcesForImport($request); 
+        $resources = $this->getAvailableResourcesForImport($request);
 
         $fields = $resources->mapWithKeys(function ($resource) use ($request) {
             return $this->getAvailableFieldsForImport($resource, $request);
@@ -51,7 +50,7 @@ class ImportController
 
         $resources = $resources->mapWithKeys(function ($resource) {
             return [
-                $resource::uriKey() => $resource::label()
+                $resource::uriKey() => $resource::label(),
             ];
         });
 
@@ -64,7 +63,6 @@ class ImportController
     }
 
     /**
-     * 
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -86,7 +84,7 @@ class ImportController
                                 ->reject(function ($modifier) {
                                     return empty($modifier['name']);
                                 });
-                        })
+                        }),
                 ],
             ),
             JSON_PRETTY_PRINT
@@ -201,8 +199,8 @@ class ImportController
         $fieldsCollection = collect($novaResource->creationFields($request));
 
         if (method_exists($novaResource, 'excludeAttributesFromImport')) {
-            $fieldsCollection = $fieldsCollection->filter(function(Field $field) use ($novaResource, $request) {
-                return !in_array($field->attribute, $novaResource::excludeAttributesFromImport($request));
+            $fieldsCollection = $fieldsCollection->filter(function (Field $field) use ($novaResource, $request) {
+                return ! in_array($field->attribute, $novaResource::excludeAttributesFromImport($request));
             });
         }
 
@@ -213,8 +211,8 @@ class ImportController
                 'rules' => $this->extractValidationRules($novaResource, $request)->get($field->attribute),
             ];
         });
-        
-        // Note: ->values() is used here to avoid this array being turned into an object due to 
+
+        // Note: ->values() is used here to avoid this array being turned into an object due to
         // non-sequential keys (which might happen due to the filtering above.
         return [
             $novaResource->uriKey() => $fields->values(),
@@ -230,19 +228,19 @@ class ImportController
                 return false;
             }
 
-            if (!isset($resource::$model)) {
+            if (! isset($resource::$model)) {
                 return false;
             }
-            
+
             $resourceReflection = (new \ReflectionClass((string) $resource));
-            
+
             if ($resourceReflection->hasMethod('canImportResource')) {
                 return $resource::canImportResource($request);
             }
 
             $static_vars = $resourceReflection->getStaticProperties();
 
-            if (!isset($static_vars['canImportResource'])) {
+            if (! isset($static_vars['canImportResource'])) {
                 return true;
             }
 
@@ -262,6 +260,7 @@ class ImportController
                 if (is_a($r, Relatable::class)) {
                     $rule[$i] = function () use ($r) {
                         $r->query = $r->query->newQuery();
+
                         return $r;
                     };
                 }

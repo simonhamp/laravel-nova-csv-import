@@ -2,16 +2,16 @@
 
 namespace SimonHamp\LaravelNovaCsvImport;
 
-use Laravel\Nova\Nova;
-use Laravel\Nova\Events\ServingNova;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Filesystem\Filesystem;
+use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Nova;
 use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
-use SimonHamp\LaravelNovaCsvImport\Http\Middleware\Authorize;
 use SimonHamp\LaravelNovaCsvImport\Http\Controllers\ImportController;
 use SimonHamp\LaravelNovaCsvImport\Http\Controllers\UploadController;
+use SimonHamp\LaravelNovaCsvImport\Http\Middleware\Authorize;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -27,11 +27,10 @@ class ToolServiceProvider extends ServiceProvider
         });
 
         Nova::serving(function (ServingNova $event) {
-
         });
 
         $this->publishes([
-            __DIR__.'/../config/csv-import.php' => config_path('csv-import.php')
+            __DIR__.'/../config/csv-import.php' => config_path('csv-import.php'),
         ], 'csv-import');
     }
 
@@ -47,11 +46,11 @@ class ToolServiceProvider extends ServiceProvider
         }
 
         Nova::router(['nova', Authorize::class], 'csv-import')
-            ->namespace(__NAMESPACE__ . '\\Http\\Controllers')
+            ->namespace(__NAMESPACE__.'\\Http\\Controllers')
             ->group(__DIR__.'/../routes/inertia.php');
 
         Route::middleware(['nova', Authorize::class])
-            ->namespace(__NAMESPACE__ . '\\Http\\Controllers')
+            ->namespace(__NAMESPACE__.'\\Http\\Controllers')
             ->prefix('nova-vendor/laravel-nova-csv-import')
             ->group(__DIR__.'/../routes/api.php');
     }

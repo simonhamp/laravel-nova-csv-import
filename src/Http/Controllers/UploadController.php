@@ -3,8 +3,8 @@
 namespace SimonHamp\LaravelNovaCsvImport\Http\Controllers;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
@@ -35,7 +35,7 @@ class UploadController
             $this->importer->toCollection($file);
         } catch (\Exception $e) {
             Log::error('Failed to parse uploaded file', [$e]);
-            
+
             return response()->json(['message' => 'Sorry, we could not import that file'], 422);
         }
 
@@ -58,7 +58,7 @@ class UploadController
         );
 
         return response()->json([
-            'configure' => "/csv-import/configure/{$new_filename}"
+            'configure' => "/csv-import/configure/{$new_filename}",
         ]);
     }
 }

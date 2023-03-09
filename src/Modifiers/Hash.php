@@ -13,7 +13,7 @@ class Hash implements Modifier
 
     public function description(): string
     {
-        return "Hash the value using the given hashing algorithm.";
+        return 'Hash the value using the given hashing algorithm.';
     }
 
     public function settings(): array
