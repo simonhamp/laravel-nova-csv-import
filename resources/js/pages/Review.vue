@@ -56,7 +56,7 @@
                                             </BasicButton>
                                             <div v-show="showFailureData[rowIndex]">
                                                 <div v-for="(value, key) in problem.values">
-                                                    {{ config.map[key] }} &rightarrow; {{ key }} :
+                                                    {{ config.mappings[key] }} &rightarrow; {{ key }} :
                                                     <code>
                                                         {{ value }}
                                                         <i v-if="! value">null</i>
@@ -112,7 +112,7 @@
                                             </BasicButton>
                                             <div v-show="showErrorData[rowIndex]">
                                                 <div v-for="(value, key) in problem.values">
-                                                    {{ config.map[key] }} &rightarrow; {{ key }} :
+                                                    {{ config.mappings[key] }} &rightarrow; {{ key }} :
                                                     <code>
                                                         {{ value }}
                                                         <i v-if="! value">null</i>
