@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use SimonHamp\LaravelNovaCsvImport\Contracts\Modifier;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Boolean;
+use SimonHamp\LaravelNovaCsvImport\Modifiers\DefaultValue;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\ExcelDate;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Hash;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Prefix;
@@ -23,6 +24,7 @@ trait HasModifiers
         // Register built-in modifiers
         static::registerModifiers(
             new Boolean,
+            new DefaultValue,
             new ExcelDate,
             new StrModifier,
             new Hash,

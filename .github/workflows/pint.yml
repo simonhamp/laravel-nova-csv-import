@@ -1,0 +1,21 @@
+name: Build Assets
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: composer update
+
+      - run: ./vendor/bin/pint
+      
+      - run: |
+          git config --global user.name 'Simon Hamp'
+          git config --global user.email 'simon.hamp@me.com'
+          if git add * ; then
+            git commit -m "Code style fixes"
+            git push
+          fi
