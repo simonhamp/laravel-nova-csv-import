@@ -28,6 +28,6 @@ class DefaultValue implements Modifier
 
     public function handle($value = null, array $settings = []): string
     {
-        return empty($value) ? $settings['string'] : $value;
+        return $value === null ? $settings['string'] : $value;
     }
 }
