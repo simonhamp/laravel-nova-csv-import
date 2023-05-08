@@ -101,6 +101,7 @@
 
                                     <optgroup label="Custom - same for all">
                                         <option value="custom">Single value</option>
+                                        <option value="custom.laravel_random_password">Random Password</option>
                                     </optgroup>
                                 </SelectControl>
 

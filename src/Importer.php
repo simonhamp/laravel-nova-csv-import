@@ -3,6 +3,7 @@
 namespace SimonHamp\LaravelNovaCsvImport;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Nova\Resource;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -162,6 +163,8 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             return $row[$mapping];
         } elseif (Str::startsWith($mapping, 'meta')) {
             return $this->getMeta(Str::remove('@meta.', "@{$mapping}"));
+        } elseif ($mapping === 'custom.laravel_random_password') {
+            return Hash::make(Str::random(16));
         } elseif ($mapping === 'custom') {
             return $this->getCustomValues($attribute);
         }
