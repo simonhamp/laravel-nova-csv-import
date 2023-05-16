@@ -50,6 +50,30 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 }
 ```
 
+### If you have customised your Nova main menu
+
+If you have [customised your main menu](https://nova.laravel.com/docs/4.0/customization/menus.html#customizing-the-main-menu),
+then you will need to manually register the tool's menu item in your custom menu for it to appear.
+
+For example, in your `app/Providers/NovaServiceProvider.php`:
+
+```php
+public function boot()
+{
+    parent::boot();
+
+    Nova::mainMenu(function (Request $request) {
+        return [
+            // ... other custom menu items
+
+            MenuSection::make('CSV Import')
+                ->path('/csv-import')
+                ->icon('upload'),
+        ];
+    }
+}
+```
+
 ## Options
 By default, _all_ of your Nova Resources will be available for import. However, there are a number of ways that you can
 explicitly limit what's available for importing.
