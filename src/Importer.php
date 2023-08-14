@@ -226,7 +226,6 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             return $this->getMeta(Str::replaceFirst('meta.', '', $mapping));
         } elseif ($mapping === 'combined') {
             return $this->getCombinedValues($attribute, $row);
-            return $this->getMeta(Str::remove('@meta.', "@{$mapping}"));
         } elseif ($mapping === 'random') {
             return Str::random($this->getRandomStringSettings($attribute));
         } elseif ($mapping === 'custom') {
