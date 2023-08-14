@@ -35,6 +35,8 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
 
     protected $custom_values = [];
 
+    protected $combined_values = [];
+
     public function __construct()
     {
         $this->bootHasModifiers();
@@ -130,6 +132,49 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         return $this;
     }
 
+    public function getCombinedValues($key = null, $row = null)
+    {
+        if ($key) {
+            $outputs = [];
+            $config = $this->combined_values[$key];
+
+            foreach ($config['columns'] as $field) {
+                $outputs[] = $this->getFieldValue($row, $field, $key);
+            }
+
+            if ($config['separator']) {
+                return implode($this->getSeparator($config['separator']), $outputs);
+            }
+
+            return $outputs;
+        }
+
+        return $this->combined_values;
+    }
+
+    protected function getSeparator(?string $rawSeparator): string
+    {
+        $separators = [
+            '__SPACE__' => ' ',
+            '__TAB__' => "\t",
+        ];
+
+        $rawSeparator = str($rawSeparator);
+
+        if ($rawSeparator->startsWith('__CUSTOM__.')) {
+            return $rawSeparator->replaceFirst('__CUSTOM__.', '');
+        }
+
+        return $separators[$rawSeparator->value()];
+    }
+
+    public function setCombinedValues(array $map): self
+    {
+        $this->combined_values = $map;
+
+        return $this;
+    }
+
     public function setRules(array $rules): self
     {
         $this->rules = $rules;
@@ -162,6 +207,8 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             return $row[$mapping];
         } elseif (Str::startsWith($mapping, 'meta')) {
             return $this->getMeta(Str::remove('@meta.', "@{$mapping}"));
+        } elseif ($mapping === 'combined') {
+            return $this->getCombinedValues($attribute, $row);
         } elseif ($mapping === 'custom') {
             return $this->getCustomValues($attribute);
         }
