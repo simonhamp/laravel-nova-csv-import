@@ -19,7 +19,13 @@ class Hash implements Modifier
     public function settings(): array
     {
         return [
-            'algorithm' => hash_algos(),
+            'algorithm' => [
+                'type' => 'select',
+                'options' => hash_algos(),
+                'help' => 'See the
+                    <a href="https://www.php.net/manual/en/function.hash.php" target="_blank">PHP documentation</a>
+                    for more details about hashing.'
+            ]
         ];
     }
 

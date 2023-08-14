@@ -13,7 +13,7 @@ class DefaultValue implements Modifier
 
     public function description(): string
     {
-        return 'Set a default value for the field if the CSV column is empty or missing';
+        return 'Set a default value for the field which will only be used if the source is a missing or empty value';
     }
 
     public function settings(): array

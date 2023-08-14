@@ -14,7 +14,7 @@ class Str implements Modifier
 
     public function description(): string
     {
-        return "Use some of Laravel's `Str` helper functions.";
+        return "Use some of Laravel's <code>Str</code> helper functions.";
     }
 
     public function settings(): array
@@ -23,21 +23,23 @@ class Str implements Modifier
             'function' => [
                 'type' => 'select',
                 'options' => [
-                    'ascii' => 'ASCII only',
-                    'camel' => 'camelCase',
-                    'kebab' => 'kebab-case',
-                    'lcfirst' => 'lower Case First',
-                    'lower' => 'lowercase',
-                    'plural' => 'Pluralize',
-                    'reverse' => 'esreveR',
-                    'singular' => 'Singularize',
-                    'slug' => 'slug-ify',
-                    'snake' => 'sname_case',
-                    'squish' => 'Squish',
-                    'title' => 'Title Case',
-                    'ucfirst' => 'Upper case first',
-                    'upper' => 'UPPERCASE',
+                    'ascii' => 'ASCII only [ascii]',
+                    'camel' => 'camelCase [camel]',
+                    'kebab' => 'kebab-case [kebab]',
+                    'lcfirst' => 'lower Case First [lcfirst]',
+                    'lower' => 'lowercase [lower]',
+                    'plural' => 'Pluralize [plural]',
+                    'reverse' => 'esreveR [reverse]',
+                    'singular' => 'Singularize [singular]',
+                    'slug' => 'slug-ify [slug]',
+                    'snake' => 'sname_case [snake]',
+                    'squish' => 'Squish [squish]',
+                    'title' => 'Title Case [title]',
+                    'ucfirst' => 'Upper case first [ucfirst]',
+                    'upper' => 'UPPERCASE [upper]',
                 ],
+                'help' => 'Find out more about these functions in the
+                    <a href="https://laravel.com/docs/helpers#strings-method-list" target="_blank">Laravel documentation</a>.',
             ],
         ];
     }

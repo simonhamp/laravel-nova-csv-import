@@ -47,7 +47,7 @@
                     </table>
                 </div>
 
-                <div class="flex justify-center space-x-2">
+                <div class="border-t flex justify-between" style="padding-top: 1rem">
                     <LinkButton @click="reconfigure"><HeroiconsOutlineRewind /> Reconfigure</LinkButton>
                     
                     <DefaultButton :disabled="importing" @click="runImport" ref="import">

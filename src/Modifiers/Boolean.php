@@ -13,9 +13,10 @@ class Boolean implements Modifier
 
     public function description(): string
     {
-        return "Converts the value to a strict boolean. The following values are considered `false`:
-            false, 'false', 0, '0', '', 'off', 'no', null
-            Everything else is considered `true`";
+        return "Converts the value to a strict boolean. The following values are considered <code>false</code>:
+            <code>false</code>, <code>'false'</code>, <code>0</code>, <code>'0'</code>, <code>''</code>,
+            <code>'off'</code>, <code>'no'</code>, <code>null</code>.<br>
+            Everything else is considered <code>true</code>";
     }
 
     public function settings(): array
