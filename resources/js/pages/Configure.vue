@@ -51,88 +51,79 @@
                     <option v-for="(label, index) in resources" :value="index">{{ label }}</option>
                 </SelectControl>
             </div>
+
+            <p v-if="resource">
+                Now choose which data should fill the appropriate fields of the chosen resource. The columns from your
+                uploaded file have been auto-matched to the resource fields with the same name.
+            </p>
+        </card>
+
+        <card class="p-8 space-y-4 mb-8" v-for="field in fields[resource]" v-if="resource">
+            <small>Field</small>
+            <h3 class="text-lg font-bold">
+                {{ field.name }}
+                <small>(<code>{{ field.attribute }}</code>)</small>
+            </h3>
+
+            <h4 class="text-base font-bold">Source</h4>
+
+            <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
+                <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
+                <option value="" v-else>- Leave field empty -</option>
+
+                <optgroup label="Single column">
+                    <option v-for="heading in headings" :value="heading">{{ heading }}</option>
+                </optgroup>
+
+                <optgroup label="Combined columns">
+                    <option value="combined">Combine values from multiple columns </option>
+                </optgroup>
+
+                <optgroup label="Meta data">
+                    <option value="meta.file">File name (with suffix): {{ file }}</option>
+                    <option value="meta.file_name">File name (without suffix): {{ file_name }}</option>
+                    <option value="meta.original_file">Original file name (with suffix): {{ config.original_filename }}</option>
+                    <option value="meta.original_file_name">Original file name (without suffix): {{ original_file_name }}</option>
+                </optgroup>
+
+                <optgroup label="Custom - same value for each row">
+                    <option value="custom">Single value</option>
+                </optgroup>
+
+                <optgroup label="Custom - different for each row">
+                    <option value="random">Random string</option>
+                </optgroup>
+            </SelectControl>
+
+            <FieldCombinator v-if="mappings[field.attribute] === 'combined'"
+                :attribute="field.attribute"
+                :config="combined[field.attribute]"
+                :headings="headings"
+                @update="setFieldCombinators">
+            </FieldCombinator>
+
+            <!-- Custom value input field -->
+            <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'custom'">
+                <span>Value</span>
+                <input v-model="values[field.attribute]"
+                    class="form-control form-input form-input-bordered flex-1">
+            </label>
+
+            <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'random'">
+                <span>Length</span>
+                <input v-model="random[field.attribute]"
+                    class="form-control form-input form-input-bordered">
+            </label>
+
+            <Modifiers v-if="mappings[field.attribute]"
+                :attribute="field.attribute"
+                :config.sync="modifiers[field.attribute]"
+                :mods="mods"
+                @update="setFieldModifiers">
+            </Modifiers>
         </card>
 
         <card class="p-8 space-y-4">
-            <template v-if="resource">
-                <p>
-                    Choose which data to fill the appropriate fields of the chosen resource. The columns from your uploaded
-                    file have been auto-matched to the resource fields with the same name.
-                </p>
-
-                <table cellpadding="10" class="min-w-full">
-                    <thead class="border-b">
-                        <tr>
-                            <th>Field</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="field in fields[resource]" class="border-b">
-                            <td class="pr-2">
-                                <span class="font-bold">{{ field.name }}</span><br>
-                                <small class="text-grey-300">{{ field.attribute }}</small>
-                            </td>
-                            <td class="space-y-2">
-                                <h4 class="text-base font-bold" style="margin: 1rem 0">Source</h4>
-
-                                <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
-                                    <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
-                                    <option value="" v-else>- Leave field empty -</option>
-
-                                    <optgroup label="Single column">
-                                        <option v-for="heading in headings" :value="heading">{{ heading }}</option>
-                                    </optgroup>
-
-                                    <optgroup label="Combined columns">
-                                        <option value="combined">Combine values from multiple columns </option>
-                                    </optgroup>
-
-                                    <optgroup label="Meta data">
-                                        <option value="meta.file">File name (with suffix): {{ file }}</option>
-                                        <option value="meta.file_name">File name (without suffix): {{ file_name }}</option>
-                                        <option value="meta.original_file">Original file name (with suffix): {{ config.original_filename }}</option>
-                                        <option value="meta.original_file_name">Original file name (without suffix): {{ original_file_name }}</option>
-                                    </optgroup>
-
-                                    <optgroup label="Custom - same value for each row">
-                                        <option value="custom">Single value</option>
-                                    </optgroup>
-
-                                    <optgroup label="Custom - different for each row">
-                                        <option value="random">Random string</option>
-                                    </optgroup>
-                                </SelectControl>
-
-                                <FieldCombinator v-if="mappings[field.attribute] === 'combined'"
-                                    :attribute="field.attribute"
-                                    :config="combined[field.attribute]"
-                                    :headings="headings"
-                                    @update="setFieldCombinators">
-                                </FieldCombinator>
-
-                                <!-- Custom value input field -->
-                                <input v-model="values[field.attribute]" v-if="mappings[field.attribute] === 'custom'"
-                                    class="form-control form-input form-input-bordered">
-
-                                <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'random'">
-                                    <span>Length</span>
-                                    <input v-model="random[field.attribute]"
-                                        class="form-control form-input form-input-bordered">
-                                </label>
-
-                                <Modifiers v-if="mappings[field.attribute]"
-                                    :attribute="field.attribute"
-                                    :config.sync="modifiers[field.attribute]"
-                                    :mods="mods"
-                                    @update="setFieldModifiers">
-                                </Modifiers>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </template>
-
             <div class="flex justify-between">
                 <LinkButton @click="goBack">
                     &leftarrow; Upload a different file
