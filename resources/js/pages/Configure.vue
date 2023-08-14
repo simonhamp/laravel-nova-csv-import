@@ -185,17 +185,6 @@ export default {
         this.init();
     },
 
-    mounted() {
-        // Setup dynamic watchers
-        // for (let field of this.fields[this.config?.resource]) {
-        //     this.$watch(`mappings.${field.attribute}`, (newValue) => {
-        //         if (newValue !== 'combined') return;
-
-        //         this.combined[field.attribute] = this.combinedFieldTemplate();
-        //     });
-        // }
-    },
-
     watch: {
         resource: {
             handler(newValue) {
