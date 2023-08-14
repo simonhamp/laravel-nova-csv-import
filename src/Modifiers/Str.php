@@ -32,7 +32,7 @@ class Str implements Modifier
                     'reverse' => 'esreveR [reverse]',
                     'singular' => 'Singularize [singular]',
                     'slug' => 'slug-ify [slug]',
-                    'snake' => 'sname_case [snake]',
+                    'snake' => 'snake_case [snake]',
                     'squish' => 'Squish [squish]',
                     'title' => 'Title Case [title]',
                     'ucfirst' => 'Upper case first [ucfirst]',
