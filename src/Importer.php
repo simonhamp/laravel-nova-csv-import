@@ -115,6 +115,22 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
         return $this;
     }
 
+    public function getRandomStringSettings($key = null)
+    {
+        if ($key) {
+            return $this->random_string_settings[$key] ?? '';
+        }
+
+        return $this->random_string_settings;
+    }
+
+    public function setRandomStringSettings(array $map): self
+    {
+        $this->random_string_settings = $map;
+
+        return $this;
+    }
+
     public function getCustomValues($key = null)
     {
         if ($key) {
@@ -163,8 +179,8 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             return $row[$mapping];
         } elseif (Str::startsWith($mapping, 'meta')) {
             return $this->getMeta(Str::remove('@meta.', "@{$mapping}"));
-        } elseif ($mapping === 'custom.laravel_random_password') {
-            return Hash::make(Str::random(16));
+        } elseif ($mapping === 'random') {
+            return Str::random($this->getRandomStringSettings($attribute));
         } elseif ($mapping === 'custom') {
             return $this->getCustomValues($attribute);
         }

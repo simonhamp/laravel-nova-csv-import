@@ -101,12 +101,21 @@
 
                                     <optgroup label="Custom - same for all">
                                         <option value="custom">Single value</option>
-                                        <option value="custom.laravel_random_password">Random Password</option>
+                                    </optgroup>
+
+                                    <optgroup label="Custom - different for each row">
+                                        <option value="random">Randomly-generated value</option>
                                     </optgroup>
                                 </SelectControl>
 
                                 <input v-model="values[field.attribute]" v-if="mappings[field.attribute] === 'custom'"
                                     class="form-control form-input form-input-bordered">
+
+                                <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'random'">
+                                    <span>Length</span>
+                                    <input v-model="random[field.attribute]"
+                                        class="form-control form-input form-input-bordered">
+                                </label>
 
                                 <draggable
                                     v-model="modifiers[field.attribute]"
@@ -190,6 +199,7 @@ export default {
             mappings: this.config?.mappings || {},
             values: this.config?.values || {},
             modifiers: this.config?.modifiers || {},
+            random: this.config?.random || {},
             saving: false,
         };
     },
@@ -263,6 +273,7 @@ export default {
                 values: this.values,
                 modifiers: this.modifiers,
                 file: this.file,
+                random: this.random,
             };
 
             Nova.request()

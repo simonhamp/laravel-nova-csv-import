@@ -9,6 +9,7 @@ use SimonHamp\LaravelNovaCsvImport\Modifiers\Boolean;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\DefaultValue;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\ExcelDate;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Hash;
+use SimonHamp\LaravelNovaCsvImport\Modifiers\Password;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Prefix;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Str as StrModifier;
 use SimonHamp\LaravelNovaCsvImport\Modifiers\Suffix;
@@ -28,6 +29,7 @@ trait HasModifiers
             new ExcelDate,
             new StrModifier,
             new Hash,
+            new Password,
             new Prefix,
             new Suffix,
         );

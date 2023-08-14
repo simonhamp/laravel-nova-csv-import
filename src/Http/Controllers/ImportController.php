@@ -78,6 +78,7 @@ class ImportController
                     'resource' => $request->input('resource'),
                     'mappings' => $request->input('mappings'),
                     'values' => $request->input('values'),
+                    'random' => $request->input('random'),
                     'modifiers' => collect($request->input('modifiers'))
                         ->map(function ($modifiers) {
                             return collect($modifiers)
@@ -108,6 +109,7 @@ class ImportController
         $import = $this->importer
             ->setAttributeMap($columns = $config['mappings'])
             ->setCustomValues($config['values'])
+            ->setRandomStringSettings($config['random'])
             ->setMeta($config['meta'])
             ->setModifiers($config['modifiers'])
             ->toCollection($this->getFilePath($file), $this->getDisk())
@@ -154,6 +156,7 @@ class ImportController
             ->setModelClass($model_class)
             ->setMeta($config['meta'])
             ->setCustomValues($config['values'])
+            ->setRandomStringSettings($config['random'])
             ->setModifiers($config['modifiers'])
             ->import($path, $this->getDisk());
 
