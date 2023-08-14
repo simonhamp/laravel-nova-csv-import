@@ -71,7 +71,7 @@
                 <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
                 <option value="" v-else>- Leave field empty -</option>
 
-                <optgroup label="Single column">
+                <optgroup label="Imported column">
                     <option v-for="heading in headings" :value="heading">{{ heading }}</option>
                 </optgroup>
 
