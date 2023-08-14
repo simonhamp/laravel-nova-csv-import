@@ -128,7 +128,7 @@
                 </div>
             </template>
 
-            <div class="flex justify-center">
+            <div class="border-t flex justify-between" style="padding-top: 1rem">
                 <LinkButton @click="reconfigure"><HeroiconsOutlineRewind /> Reconfigure</LinkButton>
                 <LinkButton @click="restart"><HeroiconsOutlineRefresh /> Upload another</LinkButton>
             </div>

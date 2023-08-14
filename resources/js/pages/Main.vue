@@ -6,18 +6,27 @@
 
         <heading class="mb-6">CSV Import</heading>
 
-        <card class="flex flex-col items-center justify-center" style="min-height: 300px">
+        <card class="flex flex-col justify-between p-8 space-y-4" style="min-height: 300px">
+            <p>
+                Upload a CSV or Excel spreadsheet to get started
+            </p>
             <!-- TODO: Put some history here -->
             <!-- TODO: Replace with Nova's own file field for sexier results -->
-            <input type="file" name="file" ref="file" @change="handleFile" class="mb-3">
-            <DefaultButton v-bind:disabled="!file" @click="upload">Upload &amp; Configure &rightarrow;</DefaultButton>
+            <div class="flex flex-1 items-center justify-center">
+                <input type="file" name="file" ref="file" @change="handleFile" class="mb-3">
+            </div>
+
+            <div class="border-t flex justify-end" style="padding-top: 1rem">
+                <DefaultButton :disabled="!file" @click="upload" class="disabled:!bg-disabled">
+                    Upload &amp; Configure &rightarrow;
+                </DefaultButton>
+            </div>
         </card>
 
         <p class="mt-8 text-center">
             Is <b>CSV Import</b> helping you work faster?<br>
-            Please consider
             <a href="https://github.com/sponsors/simonhamp" target="_blank" class="text-primary-500 hover:text-primary-400 font-bold">
-                sponsoring me
+                Sponsor me
             </a>
         </p>
     </div>
