@@ -100,7 +100,7 @@
                                     </optgroup>
 
                                     <optgroup label="Custom - different for each row">
-                                        <option value="random">Randomly-generated value</option>
+                                        <option value="random">Random string</option>
                                     </optgroup>
                                 </SelectControl>
 
