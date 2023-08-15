@@ -274,7 +274,7 @@ export default {
         },
 
         init() {
-            for (const prop of ['mappings', 'values', 'modifiers', 'combined']) {
+            for (const prop of ['mappings', 'values', 'modifiers', 'combined', 'random']) {
                 if (this.config[prop] && !Array.isArray(this.config[prop])) {
                     // https://github.com/inertiajs/inertia/issues/775#issuecomment-876030983
                     this[prop] = JSON.parse(JSON.stringify(this.config[prop]));
