@@ -35,6 +35,12 @@
                             <option v-for="heading in headings" :value="heading">{{ heading }}</option>
                         </optgroup>
 
+                        <optgroup label="Meta data">
+                            <option value="meta.file">File name (with suffix): {{ meta.file }}</option>
+                            <option value="meta.file_name">File name (without suffix): {{ meta.file_name }}</option>
+                            <option value="meta.original_file">Original file name (with suffix): {{ meta.original_file }}</option>
+                            <option value="meta.original_file_name">Original file name (without suffix): {{ meta.original_file_name }}</option>
+                        </optgroup>
 
                         <optgroup label="Custom - same value for each row">
                             <option value="custom">Custom value</option>
@@ -77,6 +83,7 @@ export default {
         'attribute',
         'config',
         'headings',
+        'meta',
     ],
     
     data() {
