@@ -46,138 +46,89 @@
 
             <div class="inline-flex items-center">
                 <b>Resource:</b>
-                <SelectControl @change="(value) => resource = value" :selected="resource" class="ml-4">
+                <SelectControl @change="(value) => resource = value" :selected="resource" class="mx-4">
                     <option value="">- Select a resource -</option>
                     <option v-for="(label, index) in resources" :value="index">{{ label }}</option>
                 </SelectControl>
             </div>
+
+            <p v-if="resource">
+                Now choose which data should fill the appropriate fields of the chosen resource. The columns from your
+                uploaded file have been auto-matched to the resource fields with the same name.
+            </p>
+        </card>
+
+        <card class="p-8 space-y-4 mb-8" v-for="field in fields[resource]" v-if="resource">
+            <small>Field</small>
+            <h3 class="text-lg font-bold">
+                {{ field.name }}
+                <small>(<code>{{ field.attribute }}</code>)</small>
+            </h3>
+
+            <h4 class="text-base font-bold">Source</h4>
+
+            <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
+                <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
+                <option value="" v-else>- Leave field empty -</option>
+
+                <optgroup label="Imported column">
+                    <option v-for="heading in headings" :value="heading">{{ heading }}</option>
+                </optgroup>
+
+                <optgroup label="Combined columns">
+                    <option value="combined">Combine values from multiple columns </option>
+                </optgroup>
+
+                <optgroup label="Meta data">
+                    <option value="meta.file">File name (with suffix): {{ file }}</option>
+                    <option value="meta.file_name">File name (without suffix): {{ file_name }}</option>
+                    <option value="meta.original_file">Original file name (with suffix): {{ config.original_filename }}</option>
+                    <option value="meta.original_file_name">Original file name (without suffix): {{ original_file_name }}</option>
+                </optgroup>
+
+                <optgroup label="Custom - same value for each row">
+                    <option value="custom">Single value</option>
+                </optgroup>
+
+                <optgroup label="Custom - different for each row">
+                    <option value="random">Random string</option>
+                </optgroup>
+            </SelectControl>
+
+            <FieldCombinator v-if="mappings[field.attribute] === 'combined'"
+                :attribute="field.attribute"
+                :config="combined[field.attribute]"
+                :headings="headings"
+                @update="setFieldCombinators">
+            </FieldCombinator>
+
+            <!-- Custom value input field -->
+            <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'custom'">
+                <span>Value</span>
+                <input v-model="values[field.attribute]"
+                    class="form-control form-input form-input-bordered flex-1">
+            </label>
+
+            <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'random'">
+                <span>Length</span>
+                <input v-model="random[field.attribute]"
+                    class="form-control form-input form-input-bordered">
+            </label>
+
+            <Modifiers v-if="mappings[field.attribute]"
+                :attribute="field.attribute"
+                :config.sync="modifiers[field.attribute]"
+                :mods="mods"
+                @update="setFieldModifiers">
+            </Modifiers>
         </card>
 
         <card class="p-8 space-y-4">
-            <template v-if="resource">
-                <p>
-                    Choose which data to fill the appropriate fields of the chosen resource. The columns from your uploaded
-                    file have been auto-matched to the resource fields with the same name.
-                </p>
-
-                <p v-if="resource">
-                    Use modifiers to modify the value <i>before</i> it gets saved to your resource. Modifiers are combinatory
-                    meaning you can stack them together to do weird and wonderful things with your data
-                    (remember what Uncle Ben said, though!) They are executed in the order defined.
-                </p>
-
-                <p>
-                    <b>TIP</b>: You can drag and drop modifiers to re-order them.
-                </p>
-
-                <table cellpadding="10">
-                    <thead class="border-b">
-                        <tr>
-                            <th>Field</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="field in fields[resource]" class="border-b">
-                            <td class="pr-2">
-                                <span class="font-bold">{{ field.name }}</span><br>
-                                <small class="text-grey-300">{{ field.attribute }}</small>
-                            </td>
-                            <td class="space-y-2">
-                                <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
-                                    <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
-                                    <option value="" v-else>- Leave field empty -</option>
-
-                                    <optgroup label="File columns">
-                                        <option v-for="heading in headings" :value="heading">{{ heading }}</option>
-                                    </optgroup>
-
-                                    <optgroup label="Meta data">
-                                        <option value="meta.file">File name (with suffix): {{ file }}</option>
-                                        <option value="meta.file_name">File name (without suffix): {{ file_name }}</option>
-                                        <option value="meta.original_file">Original file name (with suffix): {{ config.original_filename }}</option>
-                                        <option value="meta.original_file_name">Original file name (without suffix): {{ original_file_name }}</option>
-                                    </optgroup>
-
-                                    <optgroup label="Custom - same for all">
-                                        <option value="custom">Single value</option>
-                                    </optgroup>
-
-                                    <optgroup label="Custom - different for each row">
-                                        <option value="random">Randomly-generated value</option>
-                                    </optgroup>
-                                </SelectControl>
-
-                                <input v-model="values[field.attribute]" v-if="mappings[field.attribute] === 'custom'"
-                                    class="form-control form-input form-input-bordered">
-
-                                <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'random'">
-                                    <span>Length</span>
-                                    <input v-model="random[field.attribute]"
-                                        class="form-control form-input form-input-bordered">
-                                </label>
-
-                                <draggable
-                                    v-model="modifiers[field.attribute]"
-                                    handle=".handle"
-                                    item-key="modifier">
-
-                                    <template #item="{ element, index }">
-                                        <div class="flex mb-2 space-x-2 items-start border-rounded bg-gray-50 p-2 handle">
-                                            <span>{{ index + 1 }}</span>
-                                            <div class="flex flex-col flex-1 space-y-2">
-                                                <SelectControl @change="(value) => element.name = value" :selected="element.name">
-                                                    <option value="">- Do not modify -</option>
-
-                                                    <option v-for="mod in mods" :value="mod.name">{{ mod.title }}</option>
-                                                </SelectControl>
-
-                                                <label v-for="(config, name) in mods[element.name].settings"
-                                                    v-if="mods[element.name]?.settings" class="flex items-center space-x-2"
-                                                >
-                                                    <span>{{ config.title }}</span>
-
-                                                    <SelectControl v-if="config.type === 'select'"
-                                                        @change="(value) => element.settings[name] = value"
-                                                        :selected="element.settings[name]"
-                                                    >
-                                                        <option v-for="(option, value) of config.options" :value="value"
-                                                            :selected="value === config.default"
-                                                        >
-                                                            {{ option }}
-                                                        </option>
-                                                    </SelectControl>
-
-                                                    <input type="text" v-if="config.type === 'string'" v-model="element.settings[name]"
-                                                        class="form-control form-input form-input-bordered ml-4" :placeholder="config.default">
-
-                                                    <input type="text" v-if="config.type === 'boolean'" v-model="element.settings[name]"
-                                                        class="checkbox" :checked="config.default">
-
-                                                    <div class="help-text">{{ config.help }}</div>
-                                                </label>
-                                            </div>
-                                            <button @click="removeModifier(field.attribute, index)">&times;</button>
-                                        </div>
-                                    </template>
-                                </draggable>
-
-                                <button @click="addModifier(field.attribute)" v-if="mappings[field.attribute]"
-                                    class="cursor-pointer rounded text-sm font-bold focus:outline-none focus:ring h-7 px-1 md:px-3"
-                                >
-                                    Add modifier
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </template>
-
-            <div class="flex justify-center space-x-2">
+            <div class="flex justify-between">
                 <LinkButton @click="goBack">
                     &leftarrow; Upload a different file
                 </LinkButton>
-                <DefaultButton :disabled="disabledSave" @click="saveConfig">
+                <DefaultButton :disabled="can_save" @click="save">
                     {{ saving ? 'Importing...' : 'Save &amp; Preview &rightarrow;' }}
                 </DefaultButton>
             </div>
@@ -186,20 +137,25 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable';
+import FieldCombinator from '../components/FieldCombinator';
+import Modifiers from '../components/Modifiers';
 
 export default {
     components: {
         draggable,
+        FieldCombinator,
+        Modifiers,
     },
 
     data() {
         return {
             resource: this.config?.resource || '',
-            mappings: this.config?.mappings || {},
-            values: this.config?.values || {},
-            modifiers: this.config?.modifiers || {},
-            random: this.config?.random || {},
+            mappings: {},
+            values: {},
+            modifiers: {},
+            combined: {},
+            random: {},
             saving: false,
         };
     },
@@ -216,6 +172,10 @@ export default {
         'mods',
     ],
 
+    created() {
+        this.init();
+    },
+
     watch: {
         resource: {
             handler(newValue) {
@@ -227,16 +187,18 @@ export default {
 
                 // Restore original settings
                 if (newValue === this.config?.resource) {
-                    this.mappings = this.config?.mappings || {};
-                    this.values = this.config?.values || {};
+                    this.init();
 
                     return;
                 }
 
-                // Reset all of the mappings and any custom values
+                // Reset the config
                 for (let {name, attribute} of fields) {
-                    this.mappings[attribute] = "";
+                    this.mappings = {};
                     this.values = {};
+                    this.combined = {};
+                    this.modifiers = {};
+					this.random = {};
                 }
 
                 // For each field of the resource, try to find a matching heading and pre-assign
@@ -256,12 +218,8 @@ export default {
     },
 
     methods: {
-        removeModifier(attribute, index) {
-            this.modifiers[attribute].splice(index, 1);
-        },
-
-        saveConfig() {
-            if (! this.hasValidConfiguration()) {
+        save() {
+            if (! this.isValid()) {
                 return;
             }
 
@@ -272,6 +230,7 @@ export default {
                 mappings: this.mappings,
                 values: this.values,
                 modifiers: this.modifiers,
+                combined: this.combined,
                 file: this.file,
                 random: this.random,
             };
@@ -285,6 +244,7 @@ export default {
                     }
                 })
                 .catch((e) => {
+                    console.log(e);
                     this.saving = false;
                     Nova.error('There was a problem saving your configuration');
                 });
@@ -296,7 +256,7 @@ export default {
             Nova.visit('/csv-import/')
         },
 
-        hasValidConfiguration() {
+        isValid() {
             const mappedColumns = [],
                 mappings = this.mappings;
 
@@ -313,19 +273,27 @@ export default {
             return '/nova-vendor/laravel-nova-csv-import/' + path;
         },
 
-        addModifier(attribute) {
-            if (Array.isArray(this.modifiers[attribute])) {
-                this.modifiers[attribute].push({name: '', settings: {}});
-                return;
+        init() {
+            for (const prop of ['mappings', 'values', 'modifiers', 'combined', 'random']) {
+                if (this.config[prop] && !Array.isArray(this.config[prop])) {
+                    // https://github.com/inertiajs/inertia/issues/775#issuecomment-876030983
+                    this[prop] = JSON.parse(JSON.stringify(this.config[prop]));
+                }
             }
-
-            this.modifiers[attribute] = [{name: '', settings: {}}];
         },
+
+        setFieldCombinators(attribute, config) {
+            this.combined[attribute] = config;
+        },
+
+        setFieldModifiers(attribute, config) {
+            this.modifiers[attribute] = config;
+        }
     },
 
     computed: {
-        disabledSave() {
-            return ! this.hasValidConfiguration() || this.saving;
+        can_save() {
+            return ! this.isValid() || this.saving;
         },
 
         original_file_name() {

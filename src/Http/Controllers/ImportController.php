@@ -87,6 +87,7 @@ class ImportController
                                     return empty($modifier['name']);
                                 });
                         }),
+                    'combined' => $request->input('combined'),
                 ],
             ),
             JSON_PRETTY_PRINT
@@ -109,6 +110,7 @@ class ImportController
 
         $import = $this->importer
             ->setAttributeMap($columns = $config['mappings'])
+            ->setCombinedValues($config['combined'])
             ->setCustomValues($config['values'])
             ->setRandomStringSettings($config['random'])
             ->setMeta($config['meta'])
@@ -158,6 +160,7 @@ class ImportController
             ->setRules($rules)
             ->setModelClass($model_class)
             ->setMeta($config['meta'])
+            ->setCombinedValues($config['combined'])
             ->setCustomValues($config['values'])
             ->setRandomStringSettings($config['random'])
             ->setModifiers($config['modifiers'])
@@ -189,7 +192,7 @@ class ImportController
         $imported = $results['imported'];
         $total_rows = $results['total_rows'];
         $failures = collect($results['failures'])->groupBy('row');
-        $errors = collect($results['errors'])->groupBy('row');
+        $errors = $results['errors'];
 
         $config = $this->getConfigForFile($file);
 
@@ -284,6 +287,7 @@ class ImportController
 
         $config['values'] = $config['values'] ?? [];
         $config['modifiers'] = $config['modifiers'] ?? new \stdClass;
+        $config['combined'] = $config['combined'] ?? new \stdClass;
 
         $original_filename = $config['original_filename'] ?? '';
 

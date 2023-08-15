@@ -94,8 +94,10 @@ trait HasModifiers
                 'title' => $setting['title'] ?? Str::title($name),
                 'type' => is_string($setting) ? 'string' : $setting['type'] ?? 'select',
                 'default' => $setting['default'] ?? '',
+                'help' => $setting['help'] ?? '',
             ];
 
+            // Make <select>s always have key-value pairs
             if ($normalised['type'] === 'select') {
                 $options = $setting['options'] ?? $setting;
 

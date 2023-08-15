@@ -73,62 +73,26 @@
             </template>
 
             <template v-if="errors.length !== 0">
-                <!-- <BasicButton @click="showErrors = !showErrors">
+                <BasicButton @click="showErrors = !showErrors">
                     {{ showErrors ? 'Hide errors' : 'Show errors' }}
-                </BasicButton> -->
+                </BasicButton>
                 <div v-if="showErrors">
                     <table cellpadding="10">
                         <thead class="border-b">
                             <tr>
-                                <th>Row #</th>
-                                <th>Attribute</th>
-                                <th>Data</th>
                                 <th>Details</th>
-                                <th>Row Data</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template v-for="(row, rowIndex) in errors">
-                                <tr v-for="(problem, index) in row" :class="{'border-b': index === row.length - 1}">
-                                    <td v-if="index === 0" :rowspan="row.length" valign="top" align="right">
-                                        {{ problem.row - 1 }}
-                                    </td>
-                                    <td valign="top">
-                                        {{ problem.attribute }}
-                                    </td>
-                                    <td valign="top">
-                                        <code>
-                                            {{ problem.values[problem.attribute] }}
-                                            <i v-if="! problem.values[problem.attribute]">null</i>
-                                        </code>
-                                    </td>
-                                    <td valign="top">
-                                        <div v-for="error in problem.errors">{{ error }}</div>
-                                    </td>
-                                    <td :rowspan="row.length" valign="top">
-                                        <div v-if="index === 0">
-                                            <BasicButton @click="showErrorData[rowIndex] = !showErrorData[rowIndex]">
-                                                {{ showErrorData[rowIndex] ? 'Hide data' : 'Show all row data' }}
-                                            </BasicButton>
-                                            <div v-show="showErrorData[rowIndex]">
-                                                <div v-for="(value, key) in problem.values">
-                                                    {{ config.mappings[key] }} &rightarrow; {{ key }} :
-                                                    <code>
-                                                        {{ value }}
-                                                        <i v-if="! value">null</i>
-                                                    </code>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </template>
+                            <tr v-for="error in errors" class="border-b">
+                                <td>{{ error }}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </template>
 
-            <div class="flex justify-center">
+            <div class="border-t flex justify-between" style="padding-top: 1rem">
                 <LinkButton @click="reconfigure"><HeroiconsOutlineRewind /> Reconfigure</LinkButton>
                 <LinkButton @click="restart"><HeroiconsOutlineRefresh /> Upload another</LinkButton>
             </div>
