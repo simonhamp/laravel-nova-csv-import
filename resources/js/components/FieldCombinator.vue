@@ -28,7 +28,7 @@
                 <div class="flex mb-2 space-x-2 items-start border-rounded bg-gray-100 p-2 handle">
                     <div>{{ index + 1 }}</div>
 
-                    <SelectControl @change="(value) => columns[index].name = value" :selected="columns[index].name">
+                    <SelectControl @change="(value) => changeField(index, value)" :selected="columns[index].name">
                         <option value="">- Select field -</option>
 
                         <optgroup label="Imported column">
@@ -161,6 +161,15 @@ export default {
                 columns: this.columns,
                 separator: this.rawSeparator,
             });
+        },
+
+        changeField(index, value) {
+            this.columns[index].name = value;
+
+            // Reset 'value' when needed
+            if (value !== 'custom') {
+                this.columns[index].value = '';
+            }
         }
     }
 }
