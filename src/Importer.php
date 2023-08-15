@@ -159,6 +159,14 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             foreach ($config['columns'] as $field) {
                 $value = $field['value'] ?? false ?: $this->getFieldValue($row, $field['name'], $key);
 
+                // If some part of the value looks like a field name (e.g. `{{ name }}`), then replace that part for
+                // the actual value of that field
+                if (is_string($value) && preg_match_all('/{{\s*([a-z0-9_\.]+)\s*}}/i', $value, $matches)) {
+                    foreach ($matches[1] as $match) {
+                        $value = preg_replace('/{{\s*'.$match.'\s*}}/', $this->getFieldValue($row, $match, $key), $value);
+                    }
+                }
+
                 if ($field['as'] ?? false) {
                     Arr::set($outputs, $field['as'], $value);
                 } else {
