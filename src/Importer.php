@@ -156,7 +156,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             $outputs = [];
             $config = $this->combined_values[$key];
 
-            foreach ($config['columns'] as $field) {
+            foreach ($config['columns'] as $index => $field) {
                 $value = $field['value'] ?? false ?: $this->getFieldValue($row, $field['name'], $key);
 
                 // If some part of the value looks like a field name (e.g. `{{ name }}`), then replace that part for
@@ -170,7 +170,7 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
                 if ($field['as'] ?? false) {
                     Arr::set($outputs, $field['as'], $value);
                 } else {
-                    $outputs[$field['name']] = $value;
+                    $outputs[$field['name'].'_'.$index] = $value;
                 }
             }
 
