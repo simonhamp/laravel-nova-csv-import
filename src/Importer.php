@@ -3,6 +3,7 @@
 namespace SimonHamp\LaravelNovaCsvImport;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Nova\Resource;
@@ -156,7 +157,13 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             $config = $this->combined_values[$key];
 
             foreach ($config['columns'] as $field) {
-                $outputs[] = $this->getFieldValue($row, $field, $key);
+                $value = $field['value'] ?? false ?: $this->getFieldValue($row, $field['name'], $key);
+
+                if ($field['as'] ?? false) {
+                    Arr::set($outputs, $field['as'], $value);
+                } else {
+                    $outputs[$field['name']] = $value;
+                }
             }
 
             if ($config['separator']) {
