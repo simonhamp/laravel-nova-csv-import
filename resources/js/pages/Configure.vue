@@ -99,6 +99,12 @@
                 :attribute="field.attribute"
                 :config="combined[field.attribute]"
                 :headings="headings"
+                :meta="{
+                    'file': file,
+                    'file_name': file_name,
+                    'original_file': config.original_filename,
+                    'original_file_name': original_file_name,
+                }"
                 @update="setFieldCombinators">
             </FieldCombinator>
 
@@ -109,6 +115,7 @@
                     class="form-control form-input form-input-bordered flex-1">
             </label>
 
+            <!-- Random string length -->
             <label class="flex items-center space-x-2" v-if="mappings[field.attribute] === 'random'">
                 <span>Length</span>
                 <input v-model="random[field.attribute]"

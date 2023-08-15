@@ -3,6 +3,7 @@
 namespace SimonHamp\LaravelNovaCsvImport;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Nova\Resource;
@@ -155,8 +156,22 @@ class Importer implements ToModel, WithValidation, WithHeadingRow, WithMapping, 
             $outputs = [];
             $config = $this->combined_values[$key];
 
-            foreach ($config['columns'] as $field) {
-                $outputs[] = $this->getFieldValue($row, $field, $key);
+            foreach ($config['columns'] as $index => $field) {
+                $value = $field['value'] ?? false ?: $this->getFieldValue($row, $field['name'], $key);
+
+                // If some part of the value looks like a field name (e.g. `{{ name }}`), then replace that part for
+                // the actual value of that field
+                if (is_string($value) && preg_match_all('/{{\s*([a-z0-9_\.]+)\s*}}/i', $value, $matches)) {
+                    foreach ($matches[1] as $match) {
+                        $value = preg_replace('/{{\s*'.$match.'\s*}}/', $this->getFieldValue($row, $match, $key), $value);
+                    }
+                }
+
+                if ($field['as'] ?? false) {
+                    Arr::set($outputs, $field['as'], $value);
+                } else {
+                    $outputs[$field['name'].'_'.$index] = $value;
+                }
             }
 
             if ($config['separator']) {

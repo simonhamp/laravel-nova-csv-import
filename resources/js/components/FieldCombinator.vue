@@ -3,10 +3,9 @@
         <h4 class="text-base font-bold">Combine multiple columns</h4>
 
         <p>
-            Select any number of fields from your import file to be combined. Fields are
-            simply concatenated. Use the <code>separator</code> field to define how they
-            should be concatenated. If you don't choose a separator, the fields will be
-            imported as an array.
+            Select any number of fields from your import file to be combined. Fields are simply concatenated. Use the
+            <code>separator</code> field to define how they should be concatenated. If you don't choose a separator,
+            the fields will be imported as an array.
         </p>
 
         <SelectControl @change="(value) => rawSeparator = value" :selected="separatorOption">
@@ -28,10 +27,38 @@
             <template #item="{ element, index }">
                 <div class="flex mb-2 space-x-2 items-start border-rounded bg-gray-100 p-2 handle">
                     <div>{{ index + 1 }}</div>
-                    <SelectControl @change="(value) => columns[index] = value" :selected="columns[index]">
+
+                    <SelectControl @change="(value) => changeField(index, value)" :selected="columns[index].name">
                         <option value="">- Select field -</option>
-                        <option v-for="heading in headings" :value="heading">{{ heading }}</option>
+
+                        <optgroup label="Imported column">
+                            <option v-for="heading in headings" :value="heading">{{ heading }}</option>
+                        </optgroup>
+
+                        <optgroup label="Meta data">
+                            <option value="meta.file">File name (with suffix): {{ meta.file }}</option>
+                            <option value="meta.file_name">File name (without suffix): {{ meta.file_name }}</option>
+                            <option value="meta.original_file">Original file name (with suffix): {{ meta.original_file }}</option>
+                            <option value="meta.original_file_name">Original file name (without suffix): {{ meta.original_file_name }}</option>
+                        </optgroup>
+
+                        <optgroup label="Custom - same value for each row">
+                            <option value="custom">Custom value</option>
+                        </optgroup>
                     </SelectControl>
+
+                    <label class="flex items-center space-x-2" v-if="columns[index].name === 'custom'">
+                        <span>Value</span>
+                        <input v-model="columns[index].value"
+                            class="form-control form-input form-input-bordered flex-1">
+                    </label>
+
+                    <label v-if="! rawSeparator">
+                        as
+                        <input v-model="columns[index].as"
+                            class="form-control form-input form-input-bordered mx-2">
+                    </label>
+
                     <button @click="remove(index)">&times;</button>
                 </div>
             </template>
@@ -56,6 +83,7 @@ export default {
         'attribute',
         'config',
         'headings',
+        'meta',
     ],
     
     data() {
@@ -106,11 +134,24 @@ export default {
 
     methods: {
         add() {
-            this.columns.push('');
+            if (Array.isArray(this.columns)) {
+                this.columns.push(this.template());
+                return;
+            }
+
+            this.columns = [this.template()];
         },
 
         remove(index) {
             this.columns.splice(index, 1);
+        },
+
+        template() {
+            return {
+                name: '',
+                as: null,
+                value: null,
+            };
         },
 
         update() {
@@ -120,6 +161,15 @@ export default {
                 columns: this.columns,
                 separator: this.rawSeparator,
             });
+        },
+
+        changeField(index, value) {
+            this.columns[index].name = value;
+
+            // Reset 'value' when needed
+            if (value !== 'custom') {
+                this.columns[index].value = '';
+            }
         }
     }
 }
