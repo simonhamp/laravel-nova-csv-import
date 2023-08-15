@@ -4,22 +4,26 @@
 
 [![RINGER](https://www.ringerhq.com/images/get-support-on-ringer.svg)](https://www.ringerhq.com/i/simonhamp/laravel-nova-csv-import)
 
-A simple CSV import tool for Laravel Nova that allows you to upload a CSV file via Nova and choose which Nova resource
-to import it to.
+A rich and powerful CSV import component for Laravel Nova. CSV Import allows you to easily upload CSV or Excel files
+and import their data into any Nova resource.
 
-The import process lets you choose how to map the relevant columns from your uploaded file to the attributes on your
-models, with a nice summary at the end of what worked and what didn't
+**No need to make your file match your database!** The import process lets you choose how to map the relevant columns
+from your uploaded file to the attributes on your models, with a nice summary at the end of what worked and what didn't.
 
-> This package builds on top of the great work done by Sparclex with the [nova-import-card](https://github.com/Sparclex/nova-import-card) package.
+You can even modify values as they're being imported to add hashing or other manipulations, set custom values, random
+values and now even **combine multiple values to be imported into a single field**!
+
+> This package was originally built on top of work done by Sparclex on the
+[nova-import-card](https://github.com/Sparclex/nova-import-card) package.
 
 ![Laravel Nova CSV Import Screenshot](https://raw.githubusercontent.com/simonhamp/laravel-nova-csv-import/master/screenshots/readme.png)
 
-**NB: As of v0.4.0, CSV Import requires Nova v4 and above. For Nova versions prior to v4, please use a CSV Import v0.3.0 or lower.
-Please also be aware that versions prior to v0.4.0 will no longer be maintained.**
+**NB: As of v0.4.0, CSV Import requires Nova v4 and above. For Nova versions prior to v4, please use a CSV Import
+v0.3.0 or lower. Please also be aware that versions prior to v0.4.0 will no longer be maintained.**
 
 ## Sponsorship
-CSV Import is completely free to use. I've built it in my own time to fill my own needs and I also support it in my own
-time. If you'd like to show your appreciation for that, I do accept [donations via GitHub](https://github.com/sponsors/simonhamp).
+CSV Import is completely free to use for personal or commercial use, however if you're using it for commercial gain
+I'd really appreciate your support! I accept [donations via GitHub](https://github.com/sponsors/simonhamp).
 
 Thank you 🙏
 
@@ -86,6 +90,11 @@ Add this static property to your Resource to prevent it from showing up in the N
 Define a `canImportResource` method to use more complex logic to decide if this Resource can be shown during import.
 If defined, this takes precedence over the `$canImportResource` property.
 
+### Exclude certain fields
+
+CSV Import aims to respect your Nova configuration, but there are times when you want your imports to behave slightly
+differently to your Nova interface. For that you can use the `excludeAttributesFromImport()` method:
+
 `public static function excludeAttributesFromImport(): array`  
 *Default:* `[]`  
 Define a `excludeAttributesFromImport` method that returns an array of attribute names that you want to _exclude_ from
@@ -114,7 +123,7 @@ actual import. You can find more information about how importing
 
 You can define your own importer class by providing the relevant class name in your published copy of this package's
 config file.
-  
+
 First, publish the config file:
 ```
 php artisan vendor:publish --tag=csv-import
@@ -128,6 +137,14 @@ return [
     'importer' =>  App\Utilities\Importer::class,
 ];
 ```
+
+## Usage
+
+CSV Import is a powerful tool, but I'm trying to make it simple and easy to use for anyone. For tips and tricks
+please check out my [YouTube playlist](https://www.youtube.com/playlist?list=PLGN3oYkYNEzzerDeGGphm_gzsDUC8YVwS).
+
+Full documentation is coming.
+
 ## Testing
 
 We need tests! Can you help? Please consider contributing.
