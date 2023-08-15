@@ -118,8 +118,8 @@ public static function excludeAttributesFromImport()
 
 ## Importer Class 
 This package uses [maatwebsite/excel](https://github.com/Maatwebsite/Laravel-Excel) behind the scenes to handle the
-actual import. You can find more information about how importing
-[works here](https://docs.laravel-excel.com/3.1/imports/basics.html#importing-basics).
+actual import. You can find out more about
+[how importing works](https://docs.laravel-excel.com/3.1/imports/basics.html#importing-basics).
 
 You can define your own importer class by providing the relevant class name in your published copy of this package's
 config file.
