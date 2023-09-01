@@ -12,18 +12,37 @@
         "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
-        "laravel/pint": "^1.6"
+        "laravel/pint": "^1.6",
+        "nova-kit/nova-devtool": "^1.2.1"
     },
     "autoload": {
         "psr-4": {
             "SimonHamp\\LaravelNovaCsvImport\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
     "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
         "lint": "@pint",
         "lint:test": "@pint --test",
         "lint:dirty": "@pint --dirty",
-        "pint": "vendor/bin/pint"
+        "pint": "vendor/bin/pint",
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ]
     },
     "extra": {
         "laravel": {
