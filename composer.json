@@ -61,5 +61,11 @@
             "type": "composer",
             "url": "https://nova.laravel.com"
         }
+    ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/simonhamp"
+        }
     ]
 }
