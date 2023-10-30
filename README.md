@@ -22,8 +22,10 @@ values and now even **combine multiple values to be imported into a single field
 v0.3.0 or lower. Please also be aware that versions prior to v0.4.0 will no longer be maintained.**
 
 ## Sponsorship
-CSV Import is completely free to use for personal or commercial use, however if you're using it for commercial gain
-I'd really appreciate your support! I accept [donations via GitHub](https://github.com/sponsors/simonhamp).
+CSV Import is completely free to use for personal or commercial use. If it's making your job easier or you just want to
+make sure it keeps being supported and improved, I'd really appreciate your donations!
+
+[Donate now via GitHub Sponsors](https://github.com/sponsors/simonhamp)
 
 Thank you 🙏
 
