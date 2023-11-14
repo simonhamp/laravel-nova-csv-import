@@ -29,6 +29,10 @@ make sure it keeps being supported and improved, I'd really appreciate your dona
 
 Thank you 🙏
 
+## Sponsors
+
+[Laradir](https://laradir.com/?ref=laravel-nov-csv-import-github) - Connecting the best Laravel Developers with the best Laravel Teams
+
 ## Installation
 
 Install via Composer:
