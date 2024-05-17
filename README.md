@@ -2,8 +2,6 @@
 
 [![Latest Stable Version](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/v/stable?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import) [![Total Downloads](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/downloads?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import) [![License](https://poser.pugx.org/simonhamp/laravel-nova-csv-import/license?style=for-the-badge)](https://packagist.org/packages/simonhamp/laravel-nova-csv-import)
 
-[![RINGER](https://www.ringerhq.com/images/get-support-on-ringer.svg)](https://www.ringerhq.com/i/simonhamp/laravel-nova-csv-import)
-
 A rich and powerful CSV import component for Laravel Nova. CSV Import allows you to easily upload CSV or Excel files
 and import their data into any Nova resource.
 
@@ -31,7 +29,13 @@ Thank you 🙏
 
 ## Sponsors
 
+![](https://avatars.githubusercontent.com/u/126668604?s=50&v=4)
+
 [Laradir](https://laradir.com/?ref=laravel-nova-csv-import-github) - Connecting the best Laravel Developers with the best Laravel Teams
+
+![](https://avatars.githubusercontent.com/u/12368817?s=50&v=4)
+
+[quantumweb](https://quantumweb.co/?ref=simonhamp/laravel-nova-csv-import-github) - A bare-metal web agency. Less layers, better results
 
 ## Installation
 
