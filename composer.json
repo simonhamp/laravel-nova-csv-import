@@ -8,7 +8,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "laravel/nova": "^4.0",
+        "laravel/nova": "^4.0|^5.0",
         "maatwebsite/excel": "^3.1"
     },
     "require-dev": {

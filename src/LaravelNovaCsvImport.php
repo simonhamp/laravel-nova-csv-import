@@ -16,7 +16,16 @@ class LaravelNovaCsvImport extends Tool
      */
     public function boot()
     {
+        // Nova 4: Uses Nova::script() directly
         Nova::script('laravel-nova-csv-import', __DIR__.'/../dist/js/tool.js');
+
+        // Nova 5: Uses Nova::serving() with Nova::mix()
+        // We check if the mix() method exists to maintain Nova 4 compatibility
+        if (method_exists(Nova::class, 'mix')) {
+            Nova::serving(function (): void {
+                Nova::mix('laravel-nova-csv-import', __DIR__.'/../dist/mix-manifest.json');
+            });
+        }
     }
 
     /**
