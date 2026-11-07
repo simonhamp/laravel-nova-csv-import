@@ -29,11 +29,8 @@ Thank you 🙏
 
 ## Sponsors
 
-[NativePHP](https://nativephp.com/?ref=laravel-nova-csv-import-github) - Build native mobile and desktop apps with Laravel & PHP.
+[NativePHP](https://nativephp.com/?ref=laravel-nova-csv-import-github) - The fastest way to build native apps for every platform with AI.  
 [Laradevs](https://laradevs.com/?ref=laravel-nova-csv-import-github) - Connecting the best Laravel Developers with the best Laravel Teams.  
-[quantumweb](https://quantumweb.co/?ref=simonhamp/laravel-nova-csv-import-github) - A bare-metal web agency. Less layers, better results.  
-[RedGalaxy](https://www.redgalaxy.co.uk) - A web application development studio based in Cambridgeshire, building solutions to help businesses improve efficiency and profitability.  
-[Sevalla](https://sevalla.com/?utm_source=nativephp&utm_medium=Referral&utm_campaign=homepage) - Host and manage your applications, databases, and static sites in a single, intuitive platform.  
 
 ## Compatibility
 
