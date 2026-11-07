@@ -22,24 +22,16 @@
                     <div class="flex space-x-2 items-start">
                         <div>{{ index + 1 }}</div>
                         <div class="flex flex-col space-y-2">
-                            <SelectControl @change="(value) => element.name = value" :selected="element.name">
-                                <option value="">- Do not modify -</option>
-
-                                <option v-for="mod in mods" :value="mod.name">{{ mod.title }}</option>
-                            </SelectControl>
+                            <SelectControl v-model="element.name" :options="modifierOptions" class="w-full" />
 
                             <label v-for="(config, name) in mods[element.name].settings"
                                 v-if="mods[element.name]?.settings" class="flex items-center space-x-2">
                                 <span>{{ config.title }}</span>
 
                                 <SelectControl v-if="config.type === 'select'"
-                                    @change="(value) => element.settings[name] = value"
-                                    :selected="element.settings[name]">
-                                    <option v-for="(option, value) of config.options" :value="value"
-                                        :selected="value === config.default">
-                                        {{ option }}
-                                    </option>
-                                </SelectControl>
+                                    v-model="element.settings[name]"
+                                    :options="settingOptions(config)"
+                                    class="w-full" />
 
                                 <input type="text" v-if="config.type === 'string'" v-model="element.settings[name]"
                                     class="form-control form-input form-input-bordered ml-4" :placeholder="config.default">
@@ -122,6 +114,19 @@ export default {
             console.log(`Updating modifiers for ${this.attribute}`, this.modifiers);
             this.$emit('update', this.attribute, this.modifiers);
         },
-    }
+
+        settingOptions(config) {
+            return Object.entries(config.options).map(([value, label]) => ({ value, label }));
+        },
+    },
+
+    computed: {
+        modifierOptions() {
+            return [
+                { value: '', label: '- Do not modify -' },
+                ...this.mods.map((mod) => ({ value: mod.name, label: mod.title })),
+            ];
+        },
+    },
 }
 </script>

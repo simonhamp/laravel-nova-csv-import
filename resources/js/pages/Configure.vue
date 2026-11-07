@@ -46,10 +46,7 @@
 
             <div class="inline-flex items-center">
                 <b>Resource:</b>
-                <SelectControl @change="(value) => resource = value" :selected="resource" class="mx-4">
-                    <option value="">- Select a resource -</option>
-                    <option v-for="(label, index) in resources" :value="index">{{ label }}</option>
-                </SelectControl>
+                <SelectControl v-model="resource" :options="resourceOptions" class="mx-4 w-full" />
             </div>
 
             <p v-if="resource">
@@ -67,33 +64,7 @@
 
             <h4 class="text-base font-bold">Source</h4>
 
-            <SelectControl @change="(value) => mappings[field.attribute] = value" :selected="mappings[field.attribute]">
-                <option value="" v-if="field.rules.includes('required')" disabled>- This field is required -</option>
-                <option value="" v-else>- Leave field empty -</option>
-
-                <optgroup label="Imported column">
-                    <option v-for="heading in headings" :value="heading">{{ heading }}</option>
-                </optgroup>
-
-                <optgroup label="Combined columns">
-                    <option value="combined">Combine values from multiple columns </option>
-                </optgroup>
-
-                <optgroup label="Meta data">
-                    <option value="meta.file">File name (with suffix): {{ file }}</option>
-                    <option value="meta.file_name">File name (without suffix): {{ file_name }}</option>
-                    <option value="meta.original_file">Original file name (with suffix): {{ config.original_filename }}</option>
-                    <option value="meta.original_file_name">Original file name (without suffix): {{ original_file_name }}</option>
-                </optgroup>
-
-                <optgroup label="Custom - same value for each row">
-                    <option value="custom">Single value</option>
-                </optgroup>
-
-                <optgroup label="Custom - different for each row">
-                    <option value="random">Random string</option>
-                </optgroup>
-            </SelectControl>
+            <SelectControl v-model="mappings[field.attribute]" :options="sourceOptions(field)" class="w-full" />
 
             <FieldCombinator v-if="mappings[field.attribute] === 'combined'"
                 :attribute="field.attribute"
@@ -295,10 +266,35 @@ export default {
 
         setFieldModifiers(attribute, config) {
             this.modifiers[attribute] = config;
-        }
+        },
+
+        sourceOptions(field) {
+            const placeholder = field.rules.includes('required')
+                ? { value: '', label: '- This field is required -', disabled: true }
+                : { value: '', label: '- Leave field empty -' };
+
+            return [
+                placeholder,
+                ...this.headings.map((heading) => ({ value: heading, label: heading, group: 'Imported column' })),
+                { value: 'combined', label: 'Combine values from multiple columns', group: 'Combined columns' },
+                { value: 'meta.file', label: `File name (with suffix): ${this.file}`, group: 'Meta data' },
+                { value: 'meta.file_name', label: `File name (without suffix): ${this.file_name}`, group: 'Meta data' },
+                { value: 'meta.original_file', label: `Original file name (with suffix): ${this.config.original_filename}`, group: 'Meta data' },
+                { value: 'meta.original_file_name', label: `Original file name (without suffix): ${this.original_file_name}`, group: 'Meta data' },
+                { value: 'custom', label: 'Single value', group: 'Custom - same value for each row' },
+                { value: 'random', label: 'Random string', group: 'Custom - different for each row' },
+            ];
+        },
     },
 
     computed: {
+        resourceOptions() {
+            return [
+                { value: '', label: '- Select a resource -' },
+                ...Object.entries(this.resources).map(([value, label]) => ({ value, label })),
+            ];
+        },
+
         can_save() {
             return ! this.isValid() || this.saving;
         },

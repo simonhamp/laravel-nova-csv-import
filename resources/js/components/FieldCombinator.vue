@@ -8,11 +8,7 @@
             the fields will be imported as an array.
         </p>
 
-        <SelectControl @change="(value) => rawSeparator = value" :selected="separatorOption">
-            <option value="">- No separator -</option>
-            <option v-for="(name, value) in separators" :value="value">{{ name }}</option>
-            <option value="__CUSTOM__">Custom</option>
-        </SelectControl>
+        <SelectControl :model-value="separatorOption" @selected="(option) => rawSeparator = option ? option.value : ''" :options="separatorOptions" class="w-full" />
 
         <label v-if="rawSeparator?.startsWith('__CUSTOM__')" class="block">
             Custom separator
@@ -28,24 +24,7 @@
                 <div class="flex mb-2 space-x-2 items-start border-rounded bg-gray-100 p-2 handle">
                     <div>{{ index + 1 }}</div>
 
-                    <SelectControl @change="(value) => changeField(index, value)" :selected="columns[index].name">
-                        <option value="">- Select field -</option>
-
-                        <optgroup label="Imported column">
-                            <option v-for="heading in headings" :value="heading">{{ heading }}</option>
-                        </optgroup>
-
-                        <optgroup label="Meta data">
-                            <option value="meta.file">File name (with suffix): {{ meta.file }}</option>
-                            <option value="meta.file_name">File name (without suffix): {{ meta.file_name }}</option>
-                            <option value="meta.original_file">Original file name (with suffix): {{ meta.original_file }}</option>
-                            <option value="meta.original_file_name">Original file name (without suffix): {{ meta.original_file_name }}</option>
-                        </optgroup>
-
-                        <optgroup label="Custom - same value for each row">
-                            <option value="custom">Custom value</option>
-                        </optgroup>
-                    </SelectControl>
+                    <SelectControl :model-value="columns[index].name" @selected="(option) => changeField(index, option ? option.value : '')" :options="combinatorOptions" class="w-full" />
 
                     <label class="flex items-center space-x-2" v-if="columns[index].name === 'custom'">
                         <span>Value</span>
@@ -109,6 +88,26 @@ export default {
 
         separatorOption() {
             return this.rawSeparator.startsWith('__CUSTOM__') ? '__CUSTOM__' : this.rawSeparator;
+        },
+
+        separatorOptions() {
+            return [
+                { value: '', label: '- No separator -' },
+                ...Object.entries(this.separators).map(([value, name]) => ({ value, label: name })),
+                { value: '__CUSTOM__', label: 'Custom' },
+            ];
+        },
+
+        combinatorOptions() {
+            return [
+                { value: '', label: '- Select field -' },
+                ...this.headings.map((heading) => ({ value: heading, label: heading, group: 'Imported column' })),
+                { value: 'meta.file', label: `File name (with suffix): ${this.meta.file}`, group: 'Meta data' },
+                { value: 'meta.file_name', label: `File name (without suffix): ${this.meta.file_name}`, group: 'Meta data' },
+                { value: 'meta.original_file', label: `Original file name (with suffix): ${this.meta.original_file}`, group: 'Meta data' },
+                { value: 'meta.original_file_name', label: `Original file name (without suffix): ${this.meta.original_file_name}`, group: 'Meta data' },
+                { value: 'custom', label: 'Custom value', group: 'Custom - same value for each row' },
+            ];
         },
     },
 

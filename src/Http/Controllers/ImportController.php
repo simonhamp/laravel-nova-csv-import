@@ -13,6 +13,8 @@ use Laravel\Nova\Resource;
 use Laravel\Nova\Rules\Relatable;
 use Maatwebsite\Excel\Concerns\ToModel as ModelImporter;
 use SimonHamp\LaravelNovaCsvImport\Http\Requests\ImportNovaRequest;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ImportController
 {
@@ -64,8 +66,8 @@ class ImportController
     }
 
     /**
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws HttpException
+     * @throws NotFoundHttpException
      */
     public function storeConfig(NovaRequest $request)
     {
@@ -219,7 +221,7 @@ class ImportController
             return [
                 'name' => $field->name,
                 'attribute' => $field->attribute,
-                'rules' => $this->extractValidationRules($novaResource, $request)->get($field->attribute),
+                'rules' => $this->frontendRules($novaResource, $request, $field->attribute),
             ];
         });
 
@@ -257,6 +259,27 @@ class ImportController
 
             return isset($static_vars['canImportResource']) && $static_vars['canImportResource'];
         });
+    }
+
+    /**
+     * Get the string validation rules for a single field, safe to send to the
+     * front-end.
+     *
+     * The front-end only inspects rules for the presence of `required`, so only
+     * scalar (string) rules are forwarded. Rule *objects* (e.g. Nova's
+     * `Relatable`, which wraps the field instance) are dropped: serialising them
+     * to the Inertia response would trigger `BelongsTo::sortableUriKey()` against
+     * the wrong resource and throw on Nova 5. Fields without rules (e.g. readonly
+     * fields) yield an empty array rather than null.
+     *
+     * @return array<int, string>
+     */
+    protected function frontendRules(Resource $resource, ImportNovaRequest $request, string $attribute): array
+    {
+        return collect($this->extractValidationRules($resource, $request)->get($attribute) ?? [])
+            ->filter(fn ($rule) => is_string($rule))
+            ->values()
+            ->all();
     }
 
     protected function extractValidationRules(Resource $resource, NovaRequest $request): Collection

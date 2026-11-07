@@ -35,6 +35,12 @@ Thank you 🙏
 [RedGalaxy](https://www.redgalaxy.co.uk) - A web application development studio based in Cambridgeshire, building solutions to help businesses improve efficiency and profitability.  
 [Sevalla](https://sevalla.com/?utm_source=nativephp&utm_medium=Referral&utm_campaign=homepage) - Host and manage your applications, databases, and static sites in a single, intuitive platform.  
 
+## Compatibility
+
+This version targets **Nova 5**. The mapping UI uses Nova 5's `SelectControl`
+API (`:options` + `v-model`), which is not available in Nova 4. For Nova 4, use
+a `0.8.*` release.
+
 ## Installation
 
 Install via Composer:
